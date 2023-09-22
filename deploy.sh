@@ -24,6 +24,6 @@ git commit -m 'deploy'
 # git push -f git@github.com:ufo060204/ufo060204.github.io.git main
 
 # if you are deploying to https://ufo060204.github.io/
-git push -f https://github.com/ufo060204/Zongzi-Shop-Webside.git main:gh-pages
+git push -f https://github.com/ufo060204/Music-Teacher-Website.git main:gh-pages
 
 cd -
