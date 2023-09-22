@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-12 col-lg-8 mb-16 mb-lg-0">
           <div class="pe-xl-48">
-            <img class="h-lg-500 w-100 rounded-4" :src="teacherData.courseImg" alt="課程圖片">
+            <img class="h-lg-500 w-100 object-fit-cover rounded-4" :src="teacherData.courseImg" alt="課程圖片">
           </div>
         </div>
         <div class="col-12 col-lg-4 d-flex flex-column">
