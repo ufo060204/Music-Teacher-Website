@@ -1,0 +1,584 @@
+import { defineStore } from 'pinia'
+import router from '../router'
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth'
+import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore/lite'
+import Swal from 'sweetalert2'
+const fs = getFirestore()
+const provider = new GoogleAuthProvider()
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 1500,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
+
+export default defineStore('usersStore', {
+  state: () => ({
+    singUpData: {
+      email: '',
+      password: ''
+    },
+    loginUser: {
+      email: '',
+      password: ''
+    },
+    userData: {
+      uid: '',
+      userPhoto: '',
+      displayName: '',
+      email: '',
+      tel: '',
+      gender: '',
+      facebook: '',
+      instagrm: '',
+      discord: '',
+      birthday: '',
+      address: '',
+      story: '',
+      userIntro: '',
+      creationTime: '',
+      lastSignInTime: '',
+      courses_created: [],
+      courses_joined: [],
+      coursesCollection: [],
+      cart: []
+    },
+    userDataAll: {},
+    personalViewData: {},
+    coursesJoined: [],
+    coursesCreated: [],
+    coursesCollection: [],
+    coursesCollectionId: [],
+    isLoading: true,
+    isLogin: true,
+    isMember: false,
+    uid: '',
+    isEditMode: false,
+    updateNameStatus: false,
+    updateStoryStatus: false
+  }),
+  actions: {
+    // 註冊，首次登入建立會員資料
+    signUp () {
+      const auth = getAuth()
+      createUserWithEmailAndPassword(auth, this.singUpData.email, this.singUpData.password)
+        .then((userCredential) => {
+          // Signed in
+          // const user = userCredential.user
+          console.log('userCredential.user', userCredential.user)
+          this.userData.uid = userCredential.user.uid
+          this.userData.email = userCredential.user.email
+          // this.userData = userCredential.user
+          console.log('這是準備傳送的 userData', this.userData)
+          this.setUserData()
+          this.checkMemberObserver()
+          this.singUpData.email = ''
+          this.singUpData.password = ''
+          router.push('/')
+          // alert('你已成功註冊')
+          Swal.fire({
+            icon: 'success',
+            title: '恭喜註冊成功',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        })
+        .catch((error) => {
+          // const errorCode = error.code
+          // const errorMessage = error.message
+          console.log('你註冊失敗了', error.code)
+          console.log('你註冊失敗了', error.message)
+          // alert('你註冊失敗了', error.message)
+          if (error.code === 'auth/email-already-in-use') {
+            Swal.fire({
+              icon: 'error',
+              title: '你註冊失敗了',
+              text: '此 email 已被使用過',
+              confirmButtonColor: '#FE715F'
+            })
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: '你註冊失敗了',
+              confirmButtonColor: '#FE715F'
+            })
+          }
+        })
+    },
+    // 使用 email 登入
+    login () {
+      const auth = getAuth()
+      signInWithEmailAndPassword(auth, this.loginUser.email, this.loginUser.password)
+        .then((userCredential) => {
+          // Signed in
+          console.log(userCredential.user)
+          const userDocRef = doc(fs, 'users', userCredential.user.uid)
+          setDoc(userDocRef, { lastSignInTime: userCredential.user.metadata.lastSignInTime }, { merge: true })
+          console.log('更新最後登入時間')
+          this.isMember = true
+          this.loginUser.email = ''
+          this.loginUser.password = ''
+          console.log('登入成功')
+          // alert('登入成功')
+          Swal.fire({
+            icon: 'success',
+            title: '登入成功',
+            showConfirmButton: false,
+            timer: 1500
+          })
+          router.push('/')
+        })
+        .catch((error) => {
+          console.log(error.code)
+          console.log(error.message)
+          console.log('登入失敗')
+          // alert('登入失敗')
+          Swal.fire({
+            icon: 'error',
+            title: '登入失敗',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        })
+    },
+    // 使用 google 登入，首次登入建立會員資料
+    loginGoogle () {
+      const auth = getAuth()
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result)
+          const token = credential.accessToken
+          console.log('token', token)
+          // The signed-in user info.
+          console.log(result.user)
+          console.log(result.user.metadata)
+          console.log('創建時間', result.user.metadata.creationTime)
+          console.log('登入時間', result.user.metadata.lastSignInTime)
+          // IdP data available using getAdditionalUserInfo(result)
+          this.isMember = true
+          // 檢查是否是首次登入
+          if (result.user.metadata.creationTime === result.user.metadata.lastSignInTime) {
+            this.userData.uid = result.user.uid
+            this.userData.email = result.user.email
+            this.userData.creationTime = result.user.metadata.creationTime
+            this.userData.lastSignInTime = result.user.metadata.lastSignInTime
+            // this.userData = userCredential.user
+            console.log('這是第一次登入')
+            console.log('這是準備傳送的 userData', this.userData)
+            this.setUserData()
+          } else {
+            const userDocRef = doc(fs, 'users', result.user.uid)
+            setDoc(userDocRef, { lastSignInTime: result.user.metadata.lastSignInTime }, { merge: true })
+            console.log('更新最後登入時間')
+          }
+          router.push('/')
+          // alert('使用google登入成功')
+          this.getUserDataAll()
+          Toast.fire({
+            icon: 'success',
+            title: '使用google登入成功'
+          })
+        }).catch((error) => {
+          // Handle Errors here.
+          console.log(error.code)
+          console.log(error.message)
+          // The email of the user's account used.
+          console.log(error.customData.email)
+          // The AuthCredential type that was used.
+          console.log(GoogleAuthProvider.credentialFromError(error))
+          // ...
+          // alert('使用google登入失敗')
+          Toast.fire({
+            icon: 'error',
+            title: '使用google登入失敗'
+          })
+        })
+    },
+    // 登出
+    signOut () {
+      const auth = getAuth()
+      signOut(auth)
+        .then((res) => {
+          console.log('登出成功', res)
+          this.isMember = false
+          // alert('登出成功', res)
+          Toast.fire({
+            icon: 'success',
+            title: '登出成功'
+          })
+        // Sign-out successful.
+        }).catch((error) => {
+        // An error happened.
+          console.log('登出錯誤', error)
+          // alert('登出錯誤', error)
+          Toast.fire({
+            icon: 'warning',
+            title: '登出錯誤'
+          })
+        })
+    },
+    // 註冊新增會員資料
+    async setUserData () {
+      try {
+        // await addDoc(fs, 'users', `${this.userData.uid}`, this.userData)
+        await setDoc(doc(fs, 'users', this.userData.uid), this.userData)
+        console.log('課程會員新增資料成功')
+        // alert('課程會員新增資料成功')
+        Toast.fire({
+          icon: 'success',
+          title: '課程會員新增資料成功'
+        })
+      } catch (err) {
+        console.log('課程會員資料新增失敗', err)
+        // alert('課程會員資料新增失敗', err)
+        Toast.fire({
+          icon: 'error',
+          title: '課程會員資料新增失敗'
+        })
+      }
+    },
+    // 確認是否為登入狀態
+    async checkMemberObserver () {
+      return new Promise((resolve, reject) => {
+        const auth = getAuth()
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            this.isMember = true
+            console.log('你是登入狀態')
+            console.log('這是 uid', user.uid)
+            this.uid = user.uid
+            resolve(this.uid)
+            this.getUserDataAll()
+            // Toast.fire({
+            //   icon: 'success',
+            //   title: '你是登入狀態'
+            // })
+          } else if (!user) {
+            this.isMember = false
+            console.log('你是登出狀態')
+          } else {
+            reject(new Error('你是登出狀態'))
+            this.isMember = false
+            // alert('你是登出狀態')
+            // Toast.fire({
+            //   icon: 'info',
+            //   title: '你是登出狀態'
+            // })
+          }
+        })
+      })
+    },
+    checkMemberTeacherStep () {
+      const auth = getAuth()
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          router.push('/login')
+          Swal.fire({
+            icon: 'info',
+            title: '請先登入',
+            confirmButtonColor: '#FE715F'
+          })
+        }
+      })
+    },
+    // 取得單一會員資料
+    async getUserDataAll () {
+      try {
+        const docRef = doc(fs, 'users', this.uid)
+        const docSnap = await getDoc(docRef)
+
+        if (docSnap.exists()) {
+          console.log('會員資料 Document data:', docSnap.data())
+          // this.userDataAll = docSnap.data()
+          this.userData = docSnap.data()
+          this.personalViewData = { ...this.userData }
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log('No such document!')
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // 更新會員資料 PersonalView 頁面使用
+    async updateUserData () {
+      await updateDoc(doc(fs, 'users', this.userData.uid), this.userData)
+      try {
+        this.isEditMode = false
+        console.log('資料更新成功')
+        // alert('資料更新成功')
+        this.getUserDataAll()
+        Toast.fire({
+          icon: 'success',
+          title: '會員資料更新成功'
+        })
+      } catch (err) {
+        console.log('資料更新失敗', err)
+        // alert('資料更新失敗', err)
+        Toast.fire({
+          icon: 'error',
+          title: '會員資料更新失敗'
+        })
+      }
+    },
+    // 上傳圖片
+    async updateUserPhoto (item, e) {
+      try {
+        const file = e.target.files[0]
+        if (!file) {
+          return
+        }
+        // const beforeCheck = await this.beforeUpdate()
+        // if (!beforeCheck) {
+        //   return
+        // }
+        this.imgHandle(item, file)
+      } catch (err) {
+        console.log(err)
+      } finally {
+        e.target.value = null
+      }
+    },
+    beforeUpdate () {
+      console.log('確認這是圖片檔案')
+    },
+    imgHandle (item, File) {
+      const formData = new FormData()
+      formData.append('photoFile', File)
+      // 好像是多餘的
+      const file = formData.get('photoFile')
+      const reader = new FileReader()
+      // 確認是否為 jpg png
+      // const fileType = file.type
+      reader.readAsDataURL(file)
+      // 等待讀取完成
+      reader.onload = (event) => {
+        if (item === 'course') {
+          console.log('老師圖片連結', this.teacherData.teacherImg)
+          alert('使用者圖片更新成功')
+          this.teacherData.courseImg = event.target.result
+          console.log('課程圖片連結', this.teacherData.courseImg)
+        } else if (item === 'teacher') {
+          this.userData.userPhoto = event.target.result
+          updateDoc(doc(fs, 'users', this.userData.uid), this.userData)
+          console.log('老師圖片連結', this.userData.userPhoto)
+          alert('使用者圖片更新成功')
+        }
+      }
+    },
+    // 取得 user 所有開設課程
+    async getUserAllCreated () {
+      this.isLoading = true
+      await this.checkMemberObserver()
+      // 獲取用戶文檔
+      const userRef = doc(fs, 'users', this.uid)
+      getDoc(userRef) // 使用 getDoc 函数来获取文档数据
+        .then(userDoc => {
+          if (userDoc.exists()) {
+            const coursesCreatedRefs = userDoc.get('courses_created')
+            const coursePromises = []
+
+            // 解析引用，检索每个课程文档
+            coursesCreatedRefs.forEach(courseRef => {
+              coursePromises.push(getDoc(courseRef)) // 使用 getDoc 函数来获取课程文档
+            })
+
+            return Promise.all(coursePromises)
+          } else {
+            console.log('使用者不存在(老師)，User document does not exist.')
+            return []
+          }
+        })
+        .then(courseDocs => {
+          // const coursesCreated = courseDocs.map(doc => doc.data())
+          this.coursesCreated = courseDocs.map(doc => doc.data())
+          console.log('使用者開立的課程:', this.coursesCreated)
+          this.isLoading = false
+        })
+        .catch(error => {
+          console.error('沒有符合的開課:', error)
+          this.isLoading = false
+        })
+    },
+    // 加入到收藏
+    async addToCollection (courseId) {
+      if (!this.isMember) {
+        Swal.fire({
+          icon: 'info',
+          title: '請先登入',
+          confirmButtonColor: '#FE715F'
+        })
+        return
+      }
+      // 創建課程檔案
+      const courseDocRef = doc(fs, 'AllCourses', courseId)
+      // 創建使用者檔案
+      const userDocRef = doc(fs, 'users', this.userData.uid)
+      // 加入課程 id 加入到使用者的收藏 coursesCollection
+      await updateDoc(userDocRef, { coursesCollection: arrayUnion(courseDocRef) }, { merge: true })
+      try {
+        this.getUserAllCollection()
+        console.log('加入收藏成功')
+        Toast.fire({
+          icon: 'success',
+          title: '加入收藏成功'
+        })
+      } catch (err) {
+        console.log('加入收藏失敗', err)
+        Toast.fire({
+          icon: 'error',
+          title: '加入收藏失敗'
+        })
+      }
+    },
+    // 從收藏移除
+    async removeFromCollection (courseId) {
+    // 獲取課程文檔引用
+      const courseDocRef = doc(fs, 'AllCourses', courseId)
+
+      // 獲取用戶文檔引用
+      const userDocRef = doc(fs, 'users', this.userData.uid)
+
+      // 从用户的收藏 coursesCollection 中移除课程 id
+      await updateDoc(userDocRef, { coursesCollection: arrayRemove(courseDocRef) }, { merge: true })
+
+      try {
+        this.getUserAllCollection()
+        console.log('移除收藏成功')
+        Toast.fire({
+          icon: 'success',
+          title: '移除收藏成功'
+        })
+      } catch (err) {
+        console.log('移除收藏失敗', err)
+        Toast.fire({
+          icon: 'error',
+          title: '移除收藏失敗'
+        })
+      }
+    },
+    // 取得 user 所有收藏課程
+    async getUserAllCollection () {
+      this.isLoading = true
+      await this.checkMemberObserver()
+      const userRef = doc(fs, 'users', this.uid)
+      getDoc(userRef) // 使用 getDoc 函數來獲取文檔數據
+        .then(userDoc => {
+          if (userDoc.exists()) {
+            const coursesCreatedRefs = userDoc.get('coursesCollection')
+            const coursePromises = []
+
+            // 解析引用，检索每个课程文档
+            coursesCreatedRefs.forEach(courseRef => {
+              coursePromises.push(getDoc(courseRef)) // 使用 getDoc 函數來獲取文檔數據
+            })
+
+            return Promise.all(coursePromises)
+          } else {
+            console.log('使用者不存在(收藏)，User document does not exist.')
+            // return [] // 返回空陣列確保後面 .then能接收繼續執行
+          }
+        })
+        .then(async courseDocs => {
+          // 取得 使用者收藏的課程
+          this.coursesCollection = await Promise.all(courseDocs.map(async Doc => {
+            const courseData = Doc.data()
+            const teacherRef = Doc.data().teacherId
+            const teacherDisplayName = await this.getTeacherDisplayName(teacherRef)
+
+            return {
+              ...courseData,
+              teacherDisplayName
+            }
+          }))
+          // 取得使用者收藏的課程 id
+          this.coursesCollectionId = courseDocs.map(doc => doc.data().courseId)
+          console.log('使用者收藏的課程', this.coursesCollection)
+          console.log('使用者收藏的課程 id', this.coursesCollectionId)
+          this.isLoading = false
+        })
+        .catch(error => {
+          console.error('沒有符合的收藏:', error)
+          this.isLoading = false
+        })
+    },
+    // 取得 user 所有參加課程
+    async getUserAllJoin () {
+      this.isLoading = true
+      await this.checkMemberObserver()
+      const userRef = doc(fs, 'users', this.uid)
+      getDoc(userRef)
+        .then(userDoc => {
+          if (userDoc.exists()) {
+            const coursesJoinedRefs = userDoc.get('courses_joined')
+            const coursePromises = []
+
+            coursesJoinedRefs.forEach(courseRef => {
+              coursePromises.push(getDoc(courseRef))
+            })
+            return Promise.all(coursePromises)
+          } else {
+            console.log('使用者不存在(收藏)，User document does not exist.')
+            // return []
+          }
+        })
+        .then(async courseDocs => {
+          this.coursesJoined = await Promise.all(courseDocs.map(async doc => {
+            const courseData = doc.data()
+            const teacherRef = doc.data().teacherId
+            const teacherDisplayName = await this.getTeacherDisplayName(teacherRef)
+
+            return {
+              ...courseData,
+              teacherDisplayName
+            }
+          }))
+          console.log('使用者參加的課程', this.coursesJoined)
+          this.isLoading = false
+        })
+        .catch(error => {
+          console.error('沒有符合的課程:', error)
+          this.isLoading = false
+        })
+    },
+    // 取得課程老師名稱 (參加、收藏)
+    async getTeacherDisplayName (teacherRef) {
+      try {
+        const teacherDoc = await getDoc(teacherRef) // Reference引用要用 get 取得
+        if (teacherDoc.exists()) {
+          const teacherData = teacherDoc.data()
+          return teacherData.displayName || 'Unknown Teacher'
+        } else {
+          return 'Unknown Teacher'
+        }
+      } catch (error) {
+        console.error('獲取老師資料失敗', error)
+        return 'Unknown Teacher'
+      }
+    },
+    toggleCollection (courseId) {
+      // console.log('有點到')
+      if (this.coursesCollectionId.indexOf(courseId) > -1) {
+        this.removeFromCollection(courseId)
+        console.log('courseId 存在')
+      } else {
+        this.addToCollection(courseId)
+        console.log(' courseId 不存在')
+      }
+    }
+  },
+  getters: {
+    collectionStatus () {
+      this.getUserAllCollection()
+      return (courseId) => {
+        return this.coursesCollectionId.indexOf(courseId) > -1 ? 'bookmark' : 'bookmark_border'
+      }
+    }
+  }
+})
