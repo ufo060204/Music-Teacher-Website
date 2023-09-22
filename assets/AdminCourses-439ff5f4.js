@@ -1,0 +1,1 @@
+import{bf as e,n as t,aq as n}from"./_plugin-vue_export-helper-ec969899.js";const o={data(){return{}},components:{},methods:{},created(){}};function r(s,a,c,p,d,_){return n(),t("h1",null,"後台課程頁面")}const m=e(o,[["render",r]]);export{m as default};

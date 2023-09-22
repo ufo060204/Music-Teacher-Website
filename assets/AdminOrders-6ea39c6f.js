@@ -1,0 +1,1 @@
+import{bf as e,n as t,aq as n}from"./_plugin-vue_export-helper-ec969899.js";const r={data(){return{}},components:{},methods:{},created(){}};function o(s,a,c,d,p,_){return n(),t("h1",null,"後台訂單頁面")}const m=e(r,[["render",o]]);export{m as default};
