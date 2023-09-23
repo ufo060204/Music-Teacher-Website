@@ -2,12 +2,8 @@ import { defineStore } from 'pinia'
 import { getFirestore, doc, addDoc, collection, setDoc, updateDoc, arrayUnion } from 'firebase/firestore/lite'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import router from '../router'
-// import {
-//   getDatabase, ref, set, update, push, child, onValue
-// } from 'firebase/database'
-
 const fs = getFirestore()
-// const db = getDatabase()
+
 export default defineStore('teacherStore', {
   state: () => ({
     teacherData: {
@@ -51,31 +47,21 @@ export default defineStore('teacherStore', {
         console.log('這是要送出的課程檔案', this.teacherData)
 
         // 接著，使用參考關聯課程到對應的老師
-
         // 創建新課程關聯
         const courseDocRef = doc(fs, 'AllCourses', newCourseRef.id)
-        //
         // 創立老師介紹的路徑
-        // const teacherIntroRef = doc(fs, 'users', this.teacherUid) // 測試中
-        //
         console.log('創建新課程關聯', courseDocRef)
-
-        // 在創建的新課程文檔中添加開課時間的秒數部分
-        // await setDoc(courseDocRef, { startTime: startTimeInSeconds }, { merge: true })
-        // console.log('這是時間戳', startTimeInSeconds)
 
         // 課程老師檔案
         const teacherDocRef = doc(fs, 'users', this.teacherUid)
         console.log('課程老師uid - teacherUid', this.teacherUid)
+
         // 加入隨機產生的課程 id 成為 course_id 的屬性
         await setDoc(courseDocRef, { courseId: newCourseRef.id }, { merge: true })
+
         // 加入開課的老師 id 成為 teacher_id 的屬性
-        // await setDoc(courseDocRef, { teacher_id: this.teacherUid }, { merge: true })
         await setDoc(courseDocRef, { teacherId: teacherDocRef }, { merge: true })
-        //
-        // 加入老師介紹的關聯
-        // await updateDoc(courseDocRef, { teacherIntro: teacherIntroRef }, { merge: true }) // 測試中
-        //
+
         // 加入課程 id 到開課的老師 courses_created
         await updateDoc(teacherDocRef, { courses_created: arrayUnion(courseDocRef) }, { merge: true })
 
@@ -90,22 +76,9 @@ export default defineStore('teacherStore', {
         this.teacherData.courseIntro = ''
         this.teacherData.courseImg = ''
         this.teacherData.teacherImg = ''
-        // this.courseData.title = ''
-        // this.courseData.description = ''
-        // this.teacherData.id = '',
-        // this.teacherData.name = '',
-        // this.teacherData.price = '',
-        // this.teacherData.type = '',
-        // this.teacherData.time = '',
-        // this.teacherData.place = '',
-        // this.teacherData.location = '',
-        // this.teacherData.intro = '',
-        // this.teacherData.courseImg = '',
-        // this.teacherData.teacherImg = ''
-        // 其他欄位清空...
 
-        console.log('New course created successfully! 新課程創建成功')
-        alert('New course created successfully! 新課程創建成功')
+        console.log('新課程創建成功')
+        alert('新課程創建成功')
         router.push('/teacher/stepFour')
       } catch (error) {
         console.error('Error adding course: ', error)
@@ -114,14 +87,6 @@ export default defineStore('teacherStore', {
     // 新增課程
     async setCourseData () {
       try {
-        // name: this.teacherData.name,
-        // price: this.teacherData.price,
-        // type: this.teacherData.type,
-        // time: this.teacherData.time,
-        // place: this.teacherData.place,
-        // location: this.teacherData.location,
-        // intro: this.teacherData.intro,
-        // courseImg: this.teacherData.courseImg
         console.log('這是要建立的課程資料', this.teacherData)
         await addDoc(collection(fs, 'AllCourses'), this.teacherData)
         alert('課程新增成功')
@@ -153,7 +118,7 @@ export default defineStore('teacherStore', {
     imgHandle (item, File) {
       const formData = new FormData()
       formData.append('photoFile', File)
-      // 好像是多餘的
+      // 之後再檢查
       const file = formData.get('photoFile')
       const reader = new FileReader()
       // 確認是否為 jpg png

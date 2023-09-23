@@ -3,6 +3,7 @@ import router from '../router'
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth'
 import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore/lite'
 import Swal from 'sweetalert2'
+
 const fs = getFirestore()
 const provider = new GoogleAuthProvider()
 const Toast = Swal.mixin({
@@ -68,12 +69,10 @@ export default defineStore('usersStore', {
       const auth = getAuth()
       createUserWithEmailAndPassword(auth, this.singUpData.email, this.singUpData.password)
         .then((userCredential) => {
-          // Signed in
           // const user = userCredential.user
           console.log('userCredential.user', userCredential.user)
           this.userData.uid = userCredential.user.uid
           this.userData.email = userCredential.user.email
-          // this.userData = userCredential.user
           console.log('這是準備傳送的 userData', this.userData)
           this.setUserData()
           this.checkMemberObserver()
@@ -155,7 +154,7 @@ export default defineStore('usersStore', {
           const credential = GoogleAuthProvider.credentialFromResult(result)
           const token = credential.accessToken
           console.log('token', token)
-          // The signed-in user info.
+          // 登入使用者資訊
           console.log(result.user)
           console.log(result.user.metadata)
           console.log('創建時間', result.user.metadata.creationTime)
@@ -185,18 +184,17 @@ export default defineStore('usersStore', {
             title: '使用google登入成功'
           })
         }).catch((error) => {
-          // Handle Errors here.
+          // 錯誤訊息
           console.log(error.code)
           console.log(error.message)
           // The email of the user's account used.
           console.log(error.customData.email)
           // The AuthCredential type that was used.
           console.log(GoogleAuthProvider.credentialFromError(error))
-          // ...
           // alert('使用google登入失敗')
           Toast.fire({
             icon: 'error',
-            title: '使用google登入失敗'
+            title: '使用 google 登入失敗'
           })
         })
     },
@@ -295,11 +293,9 @@ export default defineStore('usersStore', {
 
         if (docSnap.exists()) {
           console.log('會員資料 Document data:', docSnap.data())
-          // this.userDataAll = docSnap.data()
           this.userData = docSnap.data()
           this.personalViewData = { ...this.userData }
         } else {
-          // docSnap.data() will be undefined in this case
           console.log('No such document!')
         }
       } catch (err) {
@@ -351,7 +347,7 @@ export default defineStore('usersStore', {
     imgHandle (item, File) {
       const formData = new FormData()
       formData.append('photoFile', File)
-      // 好像是多餘的
+      // 之後再檢查
       const file = formData.get('photoFile')
       const reader = new FileReader()
       // 確認是否為 jpg png
@@ -360,15 +356,22 @@ export default defineStore('usersStore', {
       // 等待讀取完成
       reader.onload = (event) => {
         if (item === 'course') {
-          console.log('老師圖片連結', this.teacherData.teacherImg)
-          alert('使用者圖片更新成功')
           this.teacherData.courseImg = event.target.result
           console.log('課程圖片連結', this.teacherData.courseImg)
+          // alert('使用者圖片更新成功')
+          Toast.fire({
+            icon: 'success',
+            title: '使用者圖片更新成功'
+          })
         } else if (item === 'teacher') {
           this.userData.userPhoto = event.target.result
-          updateDoc(doc(fs, 'users', this.userData.uid), this.userData)
           console.log('老師圖片連結', this.userData.userPhoto)
-          alert('使用者圖片更新成功')
+          updateDoc(doc(fs, 'users', this.userData.uid), this.userData)
+          // alert('使用者圖片更新成功')
+          Toast.fire({
+            icon: 'success',
+            title: '使用者圖片更新成功'
+          })
         }
       }
     },
@@ -378,25 +381,24 @@ export default defineStore('usersStore', {
       await this.checkMemberObserver()
       // 獲取用戶文檔
       const userRef = doc(fs, 'users', this.uid)
-      getDoc(userRef) // 使用 getDoc 函数来获取文档数据
+      getDoc(userRef) // 使用 getDoc 來獲取 document 數據
         .then(userDoc => {
           if (userDoc.exists()) {
             const coursesCreatedRefs = userDoc.get('courses_created')
             const coursePromises = []
 
-            // 解析引用，检索每个课程文档
+            // 解析引用，檢索每個課程 document
             coursesCreatedRefs.forEach(courseRef => {
-              coursePromises.push(getDoc(courseRef)) // 使用 getDoc 函数来获取课程文档
+              coursePromises.push(getDoc(courseRef)) // 使用 getDoc 來獲取課程 document 數據
             })
 
             return Promise.all(coursePromises)
           } else {
-            console.log('使用者不存在(老師)，User document does not exist.')
+            console.log('使用者 document 不存在(老師)')
             return []
           }
         })
         .then(courseDocs => {
-          // const coursesCreated = courseDocs.map(doc => doc.data())
           this.coursesCreated = courseDocs.map(doc => doc.data())
           console.log('使用者開立的課程:', this.coursesCreated)
           this.isLoading = false
@@ -445,7 +447,7 @@ export default defineStore('usersStore', {
       // 獲取用戶文檔引用
       const userDocRef = doc(fs, 'users', this.userData.uid)
 
-      // 从用户的收藏 coursesCollection 中移除课程 id
+      // 從使用者的收藏 coursesCollection 中移除課程 id
       await updateDoc(userDocRef, { coursesCollection: arrayRemove(courseDocRef) }, { merge: true })
 
       try {
@@ -468,7 +470,7 @@ export default defineStore('usersStore', {
       this.isLoading = true
       await this.checkMemberObserver()
       const userRef = doc(fs, 'users', this.uid)
-      getDoc(userRef) // 使用 getDoc 函數來獲取文檔數據
+      getDoc(userRef) // 使用 getDoc 來獲取 document 數據
         .then(userDoc => {
           if (userDoc.exists()) {
             const coursesCreatedRefs = userDoc.get('coursesCollection')
@@ -476,12 +478,12 @@ export default defineStore('usersStore', {
 
             // 解析引用，检索每个课程文档
             coursesCreatedRefs.forEach(courseRef => {
-              coursePromises.push(getDoc(courseRef)) // 使用 getDoc 函數來獲取文檔數據
+              coursePromises.push(getDoc(courseRef)) // 使用 getDoc 來獲取 document 數據
             })
 
             return Promise.all(coursePromises)
           } else {
-            console.log('使用者不存在(收藏)，User document does not exist.')
+            console.log('使用者 document 不存在(收藏)')
             // return [] // 返回空陣列確保後面 .then能接收繼續執行
           }
         })
@@ -524,7 +526,7 @@ export default defineStore('usersStore', {
             })
             return Promise.all(coursePromises)
           } else {
-            console.log('使用者不存在(收藏)，User document does not exist.')
+            console.log('使用者 document 不存在(收藏)')
             // return []
           }
         })

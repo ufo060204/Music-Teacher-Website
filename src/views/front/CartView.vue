@@ -2,13 +2,13 @@
   <!-- <section class="landing-img landing-header" /> -->
   <!-- <VueLoading :active="isLoading" :color="color" :z-index="9999"/> -->
   <section class="mt-66">
-    <banner-area/>
+    <BannerArea />
     <div class="container">
       <!-- <card-horizontal-placeholder v-if="isLoading = true"/> -->
       <div class="py-32">
         <div v-if="this.cartStatus === 'cart'" class="row">
           <div v-if="isLoading" class="col-12 col-lg-8">
-            <card-horizontal-placeholder/>
+            <CardHorizontalPlaceholder />
           </div>
           <div v-if="!isLoading && cart.length === 0" class="row d-flex align-items-center justify-content-center">
             <div class="col-md-4 col-10 d-flex align-items-center justify-content-center flex-column py-80 border rounded-4">

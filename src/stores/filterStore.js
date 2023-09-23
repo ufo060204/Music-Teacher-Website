@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import coursesStore from './coursesStore'
 import paginationStore from './paginationStore'
+
 const courseData = coursesStore()
 const paginationData = paginationStore()
 

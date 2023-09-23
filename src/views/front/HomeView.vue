@@ -1,7 +1,7 @@
 <template>
-  <home-loading/>
+  <HomeLoading />
   <main>
-    <home-banner-swiper/>
+    <HomeBannerSwiper />
     <section class="py-12 text-center">
       <div class="container">
         <h2 class="lh-base mb-6 fw-bold">
@@ -111,7 +111,7 @@
         <h2 class="lts-12 fs-1 fw-bold">COURSE</h2>
         <h2 class="lts-8 fs-6 mb-48">精選課程</h2>
         <p class="fw-light lh-lg mb-7 mb-48">音樂是靈魂的共鳴，而我們的課程精選優美。踏上專業音樂之旅，探索熱門精選課程，逐步揭開音樂的神秘面紗。這裡，我們致力於將音樂<br>的藝術帶入您的生活，以專業指導和獨特教學方法，激發您的音樂熱情。</p>
-        <CoursesSwiper/>
+        <PopularCoursesSwiper data-aos="fade-up" data-aos-duration="2000"/>
         <RouterLink to="/courses" class="nav-link">
           <button type="button" class="btn btn-outline-primary rounded-pill border-0 d-block mx-auto w-75 w-md-55 w-lg-40 mt-32 shadow fw-bold lts-8 py-16">
             更多課程
@@ -243,12 +243,11 @@
 <script>
 import { mapActions, mapWritableState } from 'pinia'
 import cartStore from '@/stores/cartStore'
-import coursesStore from '@/stores/coursesStore'
 import filterStore from '@/stores/filterStore'
 
 import HomeLoading from '@/components/HomeLoading.vue'
 import HomeBannerSwiper from '@/components/HomeBannerSwiper.vue'
-import CoursesSwiper from '@/components/CoursesSwiper.vue'
+import PopularCoursesSwiper from '@/components/PopularCoursesSwiper.vue'
 
 export default {
   data () {
@@ -256,17 +255,15 @@ export default {
     }
   },
   components: {
-    HomeLoading, HomeBannerSwiper, CoursesSwiper
+    HomeLoading, HomeBannerSwiper, PopularCoursesSwiper
   },
   methods: {
-    ...mapActions(cartStore, ['addToCart', 'copyCouponCode']),
-    ...mapActions(coursesStore, ['getAllCoursesAndTeacher'])
+    ...mapActions(cartStore, ['addToCart', 'copyCouponCode'])
   },
   computed: {
     ...mapWritableState(filterStore, ['searchCourse'])
   },
   created () {
-    this.getAllCoursesAndTeacher()
   }
 }
 </script>

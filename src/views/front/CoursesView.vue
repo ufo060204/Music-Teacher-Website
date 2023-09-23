@@ -1,9 +1,9 @@
 <template>
   <section class="mt-66">
-    <banner-area/>
+    <BannerArea />
     <div class="container">
       <div class="mb-16">
-        <card-placeholder v-if="isLoading"/>
+        <CardPlaceholder v-if="isLoading"/>
         <div v-if="!isLoading">
           <div class="row align-items-center g-8 py-6">
             <div class="col-12 col-lg-auto">
@@ -257,13 +257,6 @@ export default {
     CardPlaceholder, BannerArea, PaginationArea
   },
   watch: {
-    // 'course.data.teacherName': function (newTeacherName, oldTeacherName) {
-    //   // 当teacherName的值发生变化时，执行相应的操作
-    //   if (newTeacherName === '') {
-    //     // 当teacherName为空时，重新执行获取课程和教师数据的方法
-    //     this.getAllCoursesAndTeacher()
-    //   }
-    // }
   },
   methods: {
     ...mapActions(coursesStore, ['getAllCourses', 'getAllCoursesAndTeacher', 'getCourseDetails']),

@@ -1,9 +1,9 @@
 <template>
   <!-- <section class="landing-img landing-header" /> -->
   <section class="pt-66 vh-custom">
-    <banner-area/>
-    <progress-bar/>
-    <router-view/>
+    <BannerArea />
+    <ProgressBar />
+    <RouterView />
   </section>
 </template>
 <script>

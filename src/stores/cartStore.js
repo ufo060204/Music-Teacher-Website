@@ -4,6 +4,7 @@ import { getFirestore, doc, getDoc, addDoc, updateDoc, arrayUnion, arrayRemove, 
 import router from '../router'
 import Swal from 'sweetalert2'
 import userStore from './userStore'
+
 const userData = userStore()
 const fs = getFirestore()
 const Toast = Swal.mixin({
@@ -155,50 +156,6 @@ export default defineStore('cartStore', {
         this.isLoading = false
       }
     },
-    // 結帳(原版)
-    // async checkout () {
-    //   const userRef = doc(fs, 'users', this.uid)
-    //   const userDoc = await getDoc(userRef)
-    //   // 建立訂單時間
-    //   this.orderTime = Date.now()
-    //   if (userDoc.exists()) {
-    //     const coursesCreatedRefs = userDoc.get('cart')
-    //     console.log('購物車內容', this.selectedCourses)
-
-    //     // 創建新的訂單文檔，加入購買課程、訂單時間、購買者、總金額、優惠金額
-    //     const newOrderRef = await addDoc(collection(fs, 'orders'), {
-    //       orderCourses: coursesCreatedRefs,
-    //       orderDetail: this.selectedCourses,
-    //       createdTime: this.orderTime,
-    //       user: this.uid,
-    //       total: this.selectedCoursesTotal,
-    //       couponTotal: this.couponTotal
-    //     })
-
-    //     console.log('訂購的時間', this.orderTime)
-    //     console.log('要送出的訂單檔案', newOrderRef)
-    //     console.log('要送出的訂單檔案 id', newOrderRef.id)
-
-    //     coursesCreatedRefs.forEach(async (item) => {
-    //       // 增加課程到 courses_joined
-    //       await updateDoc(userRef, { courses_joined: arrayUnion(item) }, { merge: true })
-    //       // 增加購買者到 AllCourses 的課程當中
-    //       await updateDoc(item, { buyer: arrayUnion(this.uid) }, { merge: true })
-    //     })
-
-    //     // 加入訂單編號到購買者
-    //     await updateDoc(userRef, { myOrders: arrayUnion(newOrderRef.id) }, { merge: true })
-
-    //     // 刪除 遠端 cart 內容
-    //     await updateDoc(userRef, { cart: deleteField() })
-    //     await updateDoc(userRef, { cart: [] })
-    //     console.log('結帳成功, 參加課程追加成功')
-    //     this.cart = []
-    //     this.cartStatus = 'cart'
-    //     this.total = 0
-    //     router.push('/orderFinished')
-    //   }
-    // },
     checkAllCourses () {
       console.log(this.isSelectedCoursesAll)
       if (!this.isSelectedCoursesAll) {
@@ -213,6 +170,7 @@ export default defineStore('cartStore', {
         this.selectedCourseIds = []
       }
     },
+    // 結帳
     async checkout () {
       const userRef = doc(fs, 'users', this.uid)
       const userDoc = await getDoc(userRef)
@@ -253,14 +211,22 @@ export default defineStore('cartStore', {
         this.cartStatus = 'cart'
         this.total = 0
         router.push('/orderFinished')
+        Swal.fire({
+          title: '結帳成功',
+          icon: 'success'
+        })
       }
     },
     copyCouponCode (text) {
       navigator.clipboard.writeText(text)
         .then(() => {
+          this.couponCode = text
           console.log('優惠碼', text)
           alert('優惠碼複製成功')
-          this.couponCode = text
+          Toast.fire({
+            icon: 'success',
+            title: '優惠碼複製成功'
+          })
         })
     },
     addCouponCode (text) {
@@ -295,7 +261,7 @@ export default defineStore('cartStore', {
     },
     async filterSelect () {
       const userRef = doc(fs, 'users', this.uid)
-      const userDoc = await getDoc(userRef) // Wait for the user document to be fetched
+      const userDoc = await getDoc(userRef)
       if (userDoc.exists()) {
         const coursesCreatedRefs = userDoc.get('cart')
         console.log('購物車參考', coursesCreatedRefs)

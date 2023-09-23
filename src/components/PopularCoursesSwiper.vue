@@ -1,8 +1,37 @@
 <template>
-  <div class="row row-cols-lg-3">
-    <div v-for="course in this.suggestCourses" :key="course.data.courseId" class="col">
+  <swiper
+    :loop="true"
+    :slidesPerView="1"
+    :spaceBetween="20"
+    :freeMode="true"
+    :pagination="{
+      clickable: true,
+      dynamicBullets: false,
+      }"
+    :navigation="true"
+    :breakpoints="{
+    '768': {
+      slidesPerView: 2,
+      spaceBetween: 24,
+      },
+    '992': {
+      slidesPerView: 3,
+      spaceBetween: 24,
+      },
+    '1200': {
+      slidesPerView: 4,
+      spaceBetween: 24,
+      pagination: {
+      clickable: true,
+      dynamicBullets: true,
+      }
+      },
+    }"
+    class="mySwiper px-md-24"
+  >
+    <swiper-slide v-for="(course) in popularCourses" :key="course.data.courseId" class="mb-32">
       <router-link :to="`/course/${course.data.courseId}`">
-        <div class="card course-card rounded-4 shadow h-100">
+        <div class="card course-card rounded-4 border-0 shadow-sm h-380px">
           <div class="position-relative overflow-hidden rounded-top-4">
             <img v-if="course.data.courseImg" class="w-100 h-200px transition" :src="course.data.courseImg" alt="課程圖片">
             <img v-else class="w-100 h-200px transition" src="https://www.ils.com.tw/zh/Up_files/webskin/RWD/include/images/type3album_blank.png" alt="課程預設圖片">
@@ -38,14 +67,21 @@
           </div>
         </div>
       </router-link>
-    </div>
-  </div>
+    </swiper-slide>
+  </swiper>
 </template>
 <script>
+import { Swiper, SwiperSlide } from 'swiper/vue'
+
+// Import Swiper styles
+import 'swiper/css'
+import 'swiper/css/free-mode'
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
 
 import { mapState, mapActions } from 'pinia'
 import coursesStore from '../stores/coursesStore'
-// import userStore from '../stores/userStore'
+import userStore from '../stores/userStore'
 
 export default {
   data () {
@@ -53,17 +89,17 @@ export default {
     }
   },
   components: {
+    Swiper, SwiperSlide
   },
   computed: {
-    ...mapState(coursesStore, ['suggestCourses'])
-    // ...mapState(userStore, ['collectionStatus'])
+    ...mapState(coursesStore, ['popularCourses']),
+    ...mapState(userStore, ['collectionStatus'])
   },
   methods: {
-    ...mapActions(coursesStore, ['getSuggestCourses'])
-    // ...mapActions(userStore, ['toggleCollection'])
+    ...mapActions(coursesStore, ['getPopularCourses'])
   },
   created () {
-    this.getSuggestCourses()
+    this.getPopularCourses()
   }
 }
 </script>

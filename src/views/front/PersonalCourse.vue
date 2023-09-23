@@ -52,7 +52,7 @@
           </a>
         </div>
       </div>
-      <card-horizontal-placeholder class="mt-16" v-if="isLoading"/>
+      <CardHorizontalPlaceholder class="mt-16" v-if="isLoading"/>
       <div v-if="!isLoading" class="tab-content">
         <div v-if="coursesJoined.length === 0" class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
           <div class="w-100 w-lg-70 w-xl-60">
