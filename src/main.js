@@ -27,6 +27,9 @@ import { register } from 'swiper/element/bundle'
 // 引入 CKEditor
 import CKEditor from '@ckeditor/ckeditor5-vue'
 
+// 引入 moment
+import moment from 'moment/moment'
+
 import { Field, Form, ErrorMessage, defineRule, configure } from 'vee-validate'
 // import { required, email, min } from '@vee-validate/rules'
 import AllRules from '@vee-validate/rules'
@@ -90,6 +93,8 @@ app.use(LoadingPlugin, {
   color: '##FF700C'
 })
 
+// 全局註冊
+app.config.globalProperties.$moment = moment
 // 載入元件
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.component('VForm', Form)

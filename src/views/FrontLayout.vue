@@ -54,6 +54,9 @@
                   <li>
                     <router-link to="/personalCourse" class="dropdown-item" href="#">我的課程</router-link>
                   </li>
+                  <li>
+                    <router-link to="/personalOrders" class="dropdown-item" href="#">購買紀錄</router-link>
+                  </li>
                   <!-- <li>
                     <a class="dropdown-item" href="#">課表</a>
                   </li> -->
