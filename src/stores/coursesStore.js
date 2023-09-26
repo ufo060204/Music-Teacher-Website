@@ -127,6 +127,7 @@ export default defineStore('coursesStore', {
       this.popularCourses = this.AllCourseData.slice(0, 10)
       console.log('暢銷課程前 10 名', this.popularCourses)
     },
+    // 取得推薦課程 3
     async getSuggestCourses () {
       this.isLoading = true
       this.suggestCourses = []
