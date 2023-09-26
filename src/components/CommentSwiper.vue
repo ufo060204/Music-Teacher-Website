@@ -1,64 +1,61 @@
 <template>
-  <div class="container">
-    <swiper
-      :loop="true"
-      :slidesPerView="1"
-      :spaceBetween="20"
-      :freeMode="true"
-      :pagination="{ clickable: true }"
-      navigation
-      :breakpoints="{
-      '576': {
-        slidesPerView: 1,
-        spaceBetween: 26,
-        },
-      '768': {
-        slidesPerView: 2,
-        spaceBetween: 26,
-        },
-      '992': {
-        slidesPerView: 2,
-        spaceBetween: 26,
-        },
-      '1400': {
-        slidesPerView: 3,
-        spaceBetween: 26,
-        },
-      }"
-      class="mySwiper px-24"
-    >
-      <SwiperSlide v-for="(item) in 5" :key="item" class="mb-32">
-        <div class="card rounded-3 shadow-sm">
-          <div class="card-body">
-            <div class="d-flex align-items-center">
-              <div class="me-8">
-                <img src="/default-user-photo.png" alt="預設用戶照片" class="user-photo">
-              </div>
-              <div class="">
-                <div>
-                  <span class="fw-bold me-8">王小明</span>
-                  <span>2023-08-09</span>
-                </div>
-                <div class="text-warning">
-                  <i class="bi bi-star-fill me-4"></i>
-                  <i class="bi bi-star-fill me-4"></i>
-                  <i class="bi bi-star-fill me-4"></i>
-                  <i class="bi bi-star-fill me-4"></i>
-                  <i class="bi bi-star-fill me-4"></i>
-                </div>
-              </div>
+  <swiper
+    :loop="true"
+    :slidesPerView="1"
+    :spaceBetween="24"
+    :freeMode="true"
+    :pagination="{ clickable: true }"
+    :breakpoints="{
+    '576': {
+      slidesPerView: 1,
+      spaceBetween: 24,
+      },
+    '768': {
+      slidesPerView: 2,
+      spaceBetween: 24,
+      },
+    '992': {
+      slidesPerView: 2,
+      spaceBetween: 24,
+      },
+    '1400': {
+      slidesPerView: 3,
+      spaceBetween: 24,
+      },
+    }"
+    class="mySwiper"
+  >
+    <SwiperSlide v-for="(item) in 5" :key="item" class="mb-32">
+      <div class="card rounded-3 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="me-8">
+              <img src="/default-user-photo.png" alt="預設用戶照片" class="w-40px h-40px rounded-circle object-fit-cover">
             </div>
-            <div>
-              <p class="fw-bold my-2">推薦給所有想學音樂的同學</p>
-              <p>
-                這個音樂家教課程真是太棒了！老師不僅專業且充滿耐心，每次上課都讓我深刻理解音樂的精髓。透過個人指導，我不僅學會了演奏技巧，還能自信地創作自己的音樂作品。感謝老師用心的教學，讓我愛上了音樂，這是一段美妙的學習旅程！
-              </p>
+            <div class="">
+              <div>
+                <span class="fw-bold me-8">王小明</span>
+                <span>2023-08-09</span>
+              </div>
+              <div class="text-warning">
+                <i class="bi bi-star-fill me-4"></i>
+                <i class="bi bi-star-fill me-4"></i>
+                <i class="bi bi-star-fill me-4"></i>
+                <i class="bi bi-star-fill me-4"></i>
+                <i class="bi bi-star-fill me-4"></i>
+              </div>
             </div>
           </div>
+          <div>
+            <p class="fw-bold my-2">推薦給所有想學音樂的同學</p>
+            <p>
+              這個音樂家教課程真是太棒了！老師不僅專業且充滿耐心，每次上課都讓我深刻理解音樂的精髓。透過個人指導，我不僅學會了演奏技巧，還能自信地創作自己的音樂作品。感謝老師用心的教學，讓我愛上了音樂，這是一段美妙的學習旅程！
+            </p>
+          </div>
         </div>
-      </SwiperSlide>
-    </swiper>
-  </div>
+      </div>
+    </SwiperSlide>
+  </swiper>
 </template>
 <script>
 // Import Swiper Vue.js components
@@ -98,10 +95,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-photo {
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  object-fit: cover;
-}
 </style>

@@ -121,7 +121,12 @@
             </div>
           </div>
           <!-- 猜你喜歡 -->
-          <SuggestCourseSwiper />
+          <div class="row">
+            <div class="col-12 col-lg-8">
+              <p class="fs-4 mb-16 fw-bold">猜你喜歡</p>
+              <SuggestCourseSwiper />
+            </div>
+          </div>
           <!-- <div class="row">
             <div class="col-12 col-lg-8">
               <router-link class="btn border py-12 fs-5 w-100 rounded-4 fw-bold" to="/courses" title="返回課程">
