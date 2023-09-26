@@ -21,7 +21,8 @@ export default defineStore('orderStore', {
   state: () => ({
     myOrders: [],
     existingOrders: [],
-    isLoading: true
+    isLoading: true,
+    isBuyHistory: null
   }),
   actions: {
     async getOrders () {
@@ -29,7 +30,6 @@ export default defineStore('orderStore', {
       await userData.checkMemberObserver()
       // 創建對用戶文檔的引用
       const userDocRef = doc(fs, 'users', userData.uid)
-
       // 使用 getDoc 函數從 Firestore 中獲取用戶文檔
       const userDocSnapshot = await getDoc(userDocRef)
 
@@ -40,6 +40,12 @@ export default defineStore('orderStore', {
         // 獲取 myOrders 字段的值
         const userOrdersData = userData.myOrders
 
+        if (userOrdersData.length === 0) {
+          console.log('您沒有購買紀錄')
+          this.isBuyHistory = false
+          this.isLoading = false
+          return
+        }
         console.log('使用者的 userOrdersData 內容', userOrdersData)
 
         const ordersCollectionRef = collection(fs, 'orders')
@@ -89,11 +95,13 @@ export default defineStore('orderStore', {
         this.myOrders = ordersWithCourseDetails
         console.log('我的訂單結果', this.myOrders)
         this.isLoading = false
+        this.isBuyHistory = true
         // Toast.fire({
         //   icon: 'success',
         //   title: '取得成功'
         // })
       } else {
+        this.isLoading = false
         console.log('找不到該用戶的文檔')
       }
     }

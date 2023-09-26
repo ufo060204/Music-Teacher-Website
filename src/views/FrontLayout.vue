@@ -58,7 +58,7 @@
                     <router-link to="/personalOrders" class="dropdown-item" href="#">購買紀錄</router-link>
                   </li>
                   <!-- <li>
-                    <a class="dropdown-item" href="#">課表</a>
+                    <router-link to="/personalCalendar" class="dropdown-item" href="#">課程時間</router-link>
                   </li> -->
                   <li>
                     <a @click="signOut()" class="dropdown-item border-top" href="#">登出</a>

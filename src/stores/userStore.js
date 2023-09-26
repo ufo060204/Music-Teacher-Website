@@ -536,6 +536,7 @@ export default defineStore('usersStore', {
             const teacherRef = doc.data().teacherId
             const teacherDisplayName = await this.getTeacherDisplayName(teacherRef)
 
+            this.isLoading = false
             return {
               ...courseData,
               teacherDisplayName
@@ -546,7 +547,6 @@ export default defineStore('usersStore', {
         })
         .catch(error => {
           console.error('沒有符合的課程:', error)
-          this.isLoading = false
         })
     },
     // 取得課程老師名稱 (參加、收藏)
