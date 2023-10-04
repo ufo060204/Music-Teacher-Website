@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { getFirestore, doc, addDoc, collection, setDoc, updateDoc, arrayUnion } from 'firebase/firestore/lite'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import Swal from 'sweetalert2'
 import router from '../router'
+// import { resolve } from 'eslint-plugin-promise/rules/lib/promise-statics'
 const fs = getFirestore()
 
 export default defineStore('teacherStore', {
@@ -78,10 +80,20 @@ export default defineStore('teacherStore', {
         this.teacherData.teacherImg = ''
 
         console.log('新課程創建成功')
-        alert('新課程創建成功')
+        // alert('新課程創建成功')
+        Swal.fire({
+          icon: 'success',
+          title: '新課程創建成功',
+          showConfirmButton: false,
+          timer: 1500
+        })
         router.push('/teacher/stepFour')
       } catch (error) {
         console.error('Error adding course: ', error)
+        Swal.fire({
+          icon: 'error',
+          title: `新課程創建失敗 ${error}`
+        })
       }
     },
     // 新增課程
@@ -89,9 +101,21 @@ export default defineStore('teacherStore', {
       try {
         console.log('這是要建立的課程資料', this.teacherData)
         await addDoc(collection(fs, 'AllCourses'), this.teacherData)
-        alert('課程新增成功')
+        // alert('課程新增成功')
+        Swal.fire({
+          icon: 'success',
+          title: '課程新增成功',
+          showConfirmButton: false,
+          timer: 1500
+        })
       } catch (err) {
-        alert('課程新增失敗', err)
+        // alert('課程新增失敗', err)
+        Swal.fire({
+          icon: 'error',
+          title: '課程新增失敗',
+          showConfirmButton: false,
+          timer: 1500
+        })
       }
     },
     // 上傳圖片
@@ -101,10 +125,10 @@ export default defineStore('teacherStore', {
         if (!file) {
           return
         }
-        // const beforeCheck = await this.beforeUpdate()
-        // if (!beforeCheck) {
-        //   return
-        // }
+        const beforeCheck = await this.beforeUpdate(file)
+        if (!beforeCheck.isValid) {
+          return
+        }
         this.imgHandle(item, file)
       } catch (err) {
         console.log(err)
@@ -112,8 +136,29 @@ export default defineStore('teacherStore', {
         e.target.value = null
       }
     },
-    beforeUpdate () {
-      console.log('確認這是圖片檔案')
+    beforeUpdate (file) {
+      return new Promise((resolve) => {
+        const validType = ['image/jpeg', 'image/png']
+        console.log('圖片格式', file.type)
+        const isValidType = validType.includes(file.type)
+        const isValidSize = file.size / 1024 / 1024 < 0.15
+        if (!isValidType) {
+          Swal.fire({
+            icon: 'error',
+            title: '格式錯誤',
+            text: '請上傳 JPG 或 PNG 檔'
+          })
+        } else if (!isValidSize) {
+          Swal.fire({
+            icon: 'error',
+            title: '尺寸錯誤',
+            text: '圖片大小需小於 0.15 MB'
+          })
+        }
+        resolve({
+          isValid: isValidType && isValidSize
+        })
+      })
     },
     imgHandle (item, File) {
       const formData = new FormData()

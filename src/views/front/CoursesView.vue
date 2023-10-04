@@ -192,8 +192,8 @@
               <router-link :to="`/course/${course.data.courseId}`">
                 <div class="card course-card rounded-4 shadow h-100">
                   <div class="position-relative overflow-hidden rounded-top-4">
-                    <img v-if="course.data.courseImg" class="w-100 h-200px transition" :src="course.data.courseImg" alt="課程圖片">
-                    <img v-else class="w-100 h-200px transition" src="https://www.ils.com.tw/zh/Up_files/webskin/RWD/include/images/type3album_blank.png" alt="課程預設圖片">
+                    <img v-if="course.data.courseImg" class="w-100 h-200px transition object-fit-cover" :src="course.data.courseImg" alt="課程圖片">
+                    <img v-else class="w-100 h-200px transition object-fit-cover" src="https://www.ils.com.tw/zh/Up_files/webskin/RWD/include/images/type3album_blank.png" alt="課程預設圖片">
                     <span @click.prevent="toggleCollection(course.data.courseId)" class="material-icons-outlined position-absolute bottom-0 end-0 text-primary bookmark-icon" :class="{ 'h-auto' : this.collectionStatus(course.data.courseId) === 'bookmark', 'h-0' : this.collectionStatus(course.data.courseId) === 'bookmark_border' }" title="加入 / 移除收藏">
                       {{ this.collectionStatus(course.data.courseId) }}
                     </span>
@@ -222,7 +222,7 @@
                         <span v-else>{{ course.data.buyer.length }}</span>
                       </li>
                     </ul>
-                    <span class="fs-5 fw-bold">NT {{ course.data.price }}</span>
+                    <span class="fs-5 fw-bold">NT$ {{ course.data.price }}</span>
                   </div>
                 </div>
               </router-link>

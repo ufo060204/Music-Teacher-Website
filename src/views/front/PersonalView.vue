@@ -49,11 +49,21 @@
         </div>
         <div class="col-12 col-lg-9">
           <div class="shadow rounded-4">
-            <div style="background-image: url('https://images.unsplash.com/photo-1501612780327-45045538702b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'); height: 400px; background-size: cover; background-position: center;" class="position-relative shadow shadow rounded-top-4">
-              <!-- <label for="bg-upload">
-                <span class="material-symbols-outlined fs-3 text-grey-bold ms-16 edit-pen">Edit_Note</span>
+            <div v-if="userData.userBackgroundPhoto" :style="{ 'background-image': `url('${userData.userBackgroundPhoto}')` }" style="height: 400px; background-size: cover; background-position: center;" class="position-relative shadow rounded-top-4">
+              <label for="background-upload" accept="image/png ,image/jpg">
+                <span class="material-symbols-outlined upload-icon">
+                  cloud_upload
+                </span>
               </label>
-              <input type="file" id="bg-upload" class="d-none"> -->
+              <input @change="updateUserPhoto('background', $event)" type="file" id="background-upload" class="d-none">
+            </div>
+            <div v-else style="background-image: url('https://images.unsplash.com/photo-1501612780327-45045538702b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'); background-size: cover; background-position: center;" class="position-relative shadow rounded-top-4 h-400px">
+              <label for="background-upload" accept="image/png ,image/jpg">
+                <span class="material-symbols-outlined upload-icon">
+                  cloud_upload
+                </span>
+              </label>
+              <input @change="updateUserPhoto('background', $event)" type="file" id="background-upload" class="d-none">
             </div>
             <div class="d-flex justify-content-between align-items-center">
               <span v-if="personalViewData.story === ''" class="text-grey-bold ms-8">編輯個人頁面，<br class="d-lg-none">和大家分享更多精彩故事</span>
@@ -119,7 +129,7 @@ export default {
 <style lang="scss" scoped>
 .upload-icon {
   position: absolute;
-  right: -3px;
+  right: 0;
   bottom: 0;
   z-index: 10;
   font-size: 20px;

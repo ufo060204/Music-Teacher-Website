@@ -57,10 +57,10 @@ const routes = [
         path: 'personalOrders',
         component: () => import('../views/front/PersonalOrders.vue')
       },
-      // {
-      //   path: 'personalCalendar',
-      //   component: () => import('../views/front/PersonalCalendar.vue')
-      // },
+      {
+        path: 'personalCalendar',
+        component: () => import('../views/front/PersonalCalendar.vue')
+      },
       {
         path: 'cart',
         component: () => import('../views/front/CartView.vue')

@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 import router from '../router'
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth'
-import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore/lite'
+import { getFirestore, query, doc, setDoc, getDoc, getDocs, updateDoc, collection, arrayUnion, arrayRemove } from 'firebase/firestore/lite'
 import Swal from 'sweetalert2'
+import moment from 'moment/moment'
 
 const fs = getFirestore()
 const provider = new GoogleAuthProvider()
@@ -31,6 +32,7 @@ export default defineStore('usersStore', {
     userData: {
       uid: '',
       userPhoto: '',
+      userBackgroundPhoto: '',
       displayName: '',
       email: '',
       tel: '',
@@ -61,7 +63,13 @@ export default defineStore('usersStore', {
     uid: '',
     isEditMode: false,
     updateNameStatus: false,
-    updateStoryStatus: false
+    updateStoryStatus: false,
+    buyerStudyTimeData: [],
+    myStudyTimeData: [],
+    updateBuyerStudyTimeUid: '',
+    updateBuyerStudyTimeCourseId: '',
+    buyerStudyTime: '',
+    buyerStudyTimeAll: []
   }),
   actions: {
     // 註冊，首次登入建立會員資料
@@ -248,8 +256,8 @@ export default defineStore('usersStore', {
         onAuthStateChanged(auth, (user) => {
           if (user) {
             this.isMember = true
-            console.log('你是登入狀態')
-            console.log('這是 uid', user.uid)
+            // console.log('你是登入狀態')
+            // console.log('這是 uid', user.uid)
             this.uid = user.uid
             resolve(this.uid)
             this.getUserDataAll()
@@ -330,10 +338,10 @@ export default defineStore('usersStore', {
         if (!file) {
           return
         }
-        // const beforeCheck = await this.beforeUpdate()
-        // if (!beforeCheck) {
-        //   return
-        // }
+        const beforeCheck = await this.beforeUpdate(file)
+        if (!beforeCheck.isValid) {
+          return
+        }
         this.imgHandle(item, file)
       } catch (err) {
         console.log(err)
@@ -341,8 +349,29 @@ export default defineStore('usersStore', {
         e.target.value = null
       }
     },
-    beforeUpdate () {
-      console.log('確認這是圖片檔案')
+    beforeUpdate (file) {
+      return new Promise((resolve) => {
+        const validType = ['image/jpeg', 'image/png']
+        console.log('圖片格式', file.type)
+        const isValidType = validType.includes(file.type)
+        const isValidSize = file.size / 1024 / 1024 < 0.15
+        if (!isValidType) {
+          Swal.fire({
+            icon: 'error',
+            title: '格式錯誤',
+            text: '請上傳 JPG 或 PNG 檔'
+          })
+        } else if (!isValidSize) {
+          Swal.fire({
+            icon: 'error',
+            title: '尺寸錯誤',
+            text: '圖片大小需小於 0.15 MB'
+          })
+        }
+        resolve({
+          isValid: isValidType && isValidSize
+        })
+      })
     },
     imgHandle (item, File) {
       const formData = new FormData()
@@ -361,7 +390,7 @@ export default defineStore('usersStore', {
           // alert('使用者圖片更新成功')
           Toast.fire({
             icon: 'success',
-            title: '使用者圖片更新成功'
+            title: '課程圖片更新成功'
           })
         } else if (item === 'teacher') {
           this.userData.userPhoto = event.target.result
@@ -372,12 +401,20 @@ export default defineStore('usersStore', {
             icon: 'success',
             title: '使用者圖片更新成功'
           })
+        } else if (item === 'background') {
+          this.userData.userBackgroundPhoto = event.target.result
+          console.log('老師圖片連結', this.userData.userPhoto)
+          updateDoc(doc(fs, 'users', this.userData.uid), this.userData)
+          // alert('使用者圖片更新成功')
+          Toast.fire({
+            icon: 'success',
+            title: '背景圖片更新成功'
+          })
         }
       }
     },
     // 取得 user 所有開設課程
     async getUserAllCreated () {
-      this.isLoading = true
       await this.checkMemberObserver()
       // 獲取用戶文檔
       const userRef = doc(fs, 'users', this.uid)
@@ -401,11 +438,9 @@ export default defineStore('usersStore', {
         .then(courseDocs => {
           this.coursesCreated = courseDocs.map(doc => doc.data())
           console.log('使用者開立的課程:', this.coursesCreated)
-          this.isLoading = false
         })
         .catch(error => {
           console.error('沒有符合的開課:', error)
-          this.isLoading = false
         })
     },
     // 加入到收藏
@@ -467,7 +502,6 @@ export default defineStore('usersStore', {
     },
     // 取得 user 所有收藏課程
     async getUserAllCollection () {
-      this.isLoading = true
       await this.checkMemberObserver()
       const userRef = doc(fs, 'users', this.uid)
       getDoc(userRef) // 使用 getDoc 來獲取 document 數據
@@ -503,11 +537,9 @@ export default defineStore('usersStore', {
           this.coursesCollectionId = courseDocs.map(doc => doc.data().courseId)
           console.log('使用者收藏的課程', this.coursesCollection)
           console.log('使用者收藏的課程 id', this.coursesCollectionId)
-          this.isLoading = false
         })
         .catch(error => {
           console.error('沒有符合的收藏:', error)
-          this.isLoading = false
         })
     },
     // 取得 user 所有參加課程
@@ -536,7 +568,6 @@ export default defineStore('usersStore', {
             const teacherRef = doc.data().teacherId
             const teacherDisplayName = await this.getTeacherDisplayName(teacherRef)
 
-            this.isLoading = false
             return {
               ...courseData,
               teacherDisplayName
@@ -573,6 +604,116 @@ export default defineStore('usersStore', {
         this.addToCollection(courseId)
         console.log(' courseId 不存在')
       }
+    },
+    // 取得購買者上課時間(老師)
+    async getBuyer (courseId) {
+      const buyerStudyTimeCollection = collection(fs, 'AllCourses', courseId, 'buyerStudyTime')
+
+      const q = query(buyerStudyTimeCollection)
+      const querySnapshot = await getDocs(q)
+      // const buyerStudyTimeData = []
+      querySnapshot.forEach(async (item) => {
+        const data = {}
+        const userRef = doc(fs, 'users', item.id)
+        const userDataSnapshot = await getDoc(userRef)
+        const userData = userDataSnapshot.data()
+        data.uid = item.id
+        data.courseId = courseId
+        data.studyTime = item.data().studyTime
+        // data.month = item.data().month
+        // data.date = item.data().date
+        data.createdTime = item.data().createdTime
+        data.displayName = userData.displayName
+        this.buyerStudyTimeData.push(data)
+      })
+      // this.buyerStudyTimeData = buyerStudyTimeData
+      console.log('buyerStudyTimeData 數據', this.buyerStudyTimeData)
+    },
+    // 取得我的上課時間(學生)
+    async getMyStudyTime (courseId) {
+      await this.checkMemberObserver()
+      // await this.getBuyer(courseId)
+      const buyerStudyTimeCollection = collection(fs, 'AllCourses', courseId, 'buyerStudyTime')
+
+      const q = query(buyerStudyTimeCollection)
+      const querySnapshot = await getDocs(q)
+      // const buyerStudyTimeData = []
+      querySnapshot.forEach(async (item) => {
+        if (item.id === this.uid) {
+          this.myStudyTimeData.push(item.data())
+        }
+        console.log('我的上課時間', this.myStudyTimeData)
+      })
+    },
+    closeBuyTimeModal () {
+      this.buyerStudyTimeData = []
+      this.myStudyTimeData = []
+    },
+    beforeUpdateBuyerStudyTime (courseId, userId) {
+      this.updateBuyerStudyTimeCourseId = courseId
+      this.updateBuyerStudyTimeUid = userId
+      console.log('準備更新的上課時間對象', this.updateBuyerStudyTimeCourseId, this.updateBuyerStudyTimeUid)
+    },
+    // 更新學生上課時間
+    async updateBuyerStudyTime () {
+      console.log(this.buyerStudyTimeData)
+      const buyerStudyTimeRef = doc(fs, 'AllCourses', this.updateBuyerStudyTimeCourseId, 'buyerStudyTime', this.updateBuyerStudyTimeUid)
+      try {
+        await updateDoc(buyerStudyTimeRef, {
+          studyTime: this.buyerStudyTime
+        })
+        this.buyerStudyTimeData = []
+        console.log('上課時間更新成功')
+        Toast.fire({
+          icon: 'success',
+          title: '上課時間更新成功'
+        })
+      } catch (error) {
+        console.error('上課時間更新失敗：', error)
+        Toast.fire({
+          icon: 'error',
+          title: '上課時間更新失敗'
+        })
+      }
+    },
+    async getUserAllJoinStudyTime () {
+      await this.checkMemberObserver()
+      const userRef = doc(fs, 'users', this.uid)
+
+      getDoc(userRef)
+        .then(async userDoc => {
+          if (userDoc.exists()) {
+            const coursesJoinedRefs = await userDoc.get('courses_joined')
+
+            coursesJoinedRefs.map(async courseRef => {
+              const data = {}
+              const courseDoc = await getDoc(courseRef)
+              data.title = courseDoc.data().name
+              const courseId = courseRef.id
+              data.courseId = courseId
+              const buyerStudyTimeCollection = collection(fs, 'AllCourses', courseId, 'buyerStudyTime')
+              const studyTimeSnapshot = await getDocs(buyerStudyTimeCollection)
+              studyTimeSnapshot.forEach(async item => {
+                console.log('item.data', item.id, item.data())
+                if (item.id === this.uid) {
+                  if (item.data().studyTime) {
+                    data.start = moment(item.data().studyTime).format('YYYY-MM-DD HH:mm')
+                    data.end = moment(item.data().studyTime).add(courseDoc.data().time, 'minute').format('YYYY-MM-DD HH:mm')
+                  }
+                }
+              })
+              this.buyerStudyTimeAll.push(data)
+            })
+
+            console.log('使用者上課時間', this.buyerStudyTimeAll)
+          } else {
+            console.log('使用者 document 不存在(收藏)')
+            // return []
+          }
+        })
+        .catch(error => {
+          console.error('取得使用者文檔出錯:', error)
+        })
     }
   },
   getters: {

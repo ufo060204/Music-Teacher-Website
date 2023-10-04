@@ -57,7 +57,7 @@ export default defineStore('orderStore', {
 
         // 將查詢結果轉換為數組
         const existingOrders = []
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(async doc => {
           const orderData = doc.data()
           existingOrders.push(orderData)
         })

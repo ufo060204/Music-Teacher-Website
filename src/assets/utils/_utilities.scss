@@ -253,6 +253,7 @@ $utilities: map-merge(
         200: 200px,
         200px: 200px,
         380px: 380px,
+        400px: 400px,
         500: 500px,
         auto: auto
       )
@@ -831,7 +832,8 @@ $utilities: map-merge(
       class: z,
       values: $zindex-levels,
     ),
-    "letter-spacing": (responsive: true,
+    "letter-spacing": (
+      responsive: true,
       property: letter-spacing,
       class: lts,
       values: (

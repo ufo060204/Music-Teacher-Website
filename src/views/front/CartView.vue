@@ -222,7 +222,7 @@ export default {
     ...mapWritableState(cartStore, ['couponCode', 'selectedCourses', 'selectedCourseIds', 'isSelectedCoursesAll'])
   },
   methods: {
-    ...mapActions(cartStore, ['getCart', 'removeFromCollection', 'getUid', 'addCouponCode', 'goCheckout', 'goBackCart', 'checkout', 'filterSelect', 'checkAllCourses']),
+    ...mapActions(cartStore, ['getCart', 'removeFromCollection', 'getUid', 'addCouponCode', 'goCheckout', 'goBackCart', 'checkout', 'filterSelect', 'checkAllCourses', 'refTest']),
     ...mapActions(bannerStore, ['getBannerInfo']),
     updateCartItem (item) {
       const data = {

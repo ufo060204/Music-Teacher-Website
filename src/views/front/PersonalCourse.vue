@@ -53,18 +53,16 @@
             </a>
           </div>
         </div>
-        <CardHorizontalPlaceholder class="mt-16" v-if="isLoading"/>
-        <div v-if="!isLoading" class="tab-content d-flex flex-column justify-content-center">
-          <div v-if="coursesJoined.length === 0" class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
-            <div class="w-100 w-lg-70 w-xl-60">
+        <div class="tab-content d-flex flex-column justify-content-center">
+          <CardHorizontalPlaceholder class="mt-16" v-if="isLoading"/>
+          <div class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
+            <div v-if="!isLoading && coursesJoined.length === 0" class="w-100 w-lg-70 w-xl-60">
               <div class="text-center">
                 <p class="fs-1 my-16">尚未參加課程</p>
                 <router-link to="/courses" class="btn btn-primary rounded-4">瀏覽課程</router-link>
               </div>
             </div>
-          </div>
-          <div class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
-            <div class="w-100 w-lg-70 w-xl-60">
+            <div v-if="!isLoading && coursesJoined.length !== 0" class="w-100 w-lg-70 w-xl-60">
               <div v-for="(course) in coursesJoined" :key="course.courseId">
                 <router-link :to="`/course/${course.courseId}`" class="course-card-list">
                   <div class="meta position-relative h-170px">
@@ -84,28 +82,26 @@
                       <span class="material-symbols-outlined fs-6 me-4">map</span>
                       <span class="me-8">{{ course.location }}</span>
                       <span class="material-symbols-outlined fs-6 me-4">group</span>
-                      <span>{{ coursesJoined.length }}</span>
+                      <span>{{ course.buyer.length }}</span>
                     </p>
                     <p class="d-flex justify-content-between align-items-center">
                       <span class="text-custom-black fs-5 fw-bold">NT$ {{ course.price }}</span>
-                      <!-- <button type="button" class="btn btn-outline-primary border-0 fw-bold">
-                        設定上課時間
-                      </button> -->
+                      <button @click.prevent="getMyStudyTime(course.courseId)" type="button" class="btn btn-outline-primary border-0 fw-bold" data-bs-toggle="modal" data-bs-target="#MyStudyTimeModal">
+                        查看上課時間
+                      </button>
                     </p>
                   </div>
                 </router-link>
               </div>
             </div>
           </div>
-          <div v-if="coursesCreated.length === 0" class="tab-pane fade" id="teacher" role="tabpanel" aria-labelledby="teacher-tab">
-            <div class="w-100 w-lg-70 w-xl-60">
+          <div class="tab-pane fade" id="teacher" role="tabpanel" aria-labelledby="teacher-tab">
+            <div v-if="coursesCreated.length === 0" class="w-100 w-lg-70 w-xl-60">
               <div class="text-center">
                 <p class="fs-1 my-16">尚未開立課程</p>
                 <router-link to="/teacher/stepOne" class="btn btn-primary rounded-4">前往開課</router-link>
               </div>
             </div>
-          </div>
-          <div class="tab-pane fade" id="teacher" role="tabpanel" aria-labelledby="teacher-tab">
             <div class="w-100 w-lg-70 w-xl-60">
               <div v-for="(course) in coursesCreated" :key="course.courseId">
                 <router-link :to="`/course/${course.courseId}`" class="course-card-list">
@@ -126,28 +122,28 @@
                       <span class="material-symbols-outlined fs-6 me-4">map</span>
                       <span class="me-8">{{ course.location }}</span>
                       <span class="material-symbols-outlined fs-6 me-4">group</span>
-                      <span>{{ coursesJoined.length }}</span>
+                      <span>{{ course.buyer.length }}</span>
                     </p>
-                    <p class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center">
                       <span class="text-custom-black fs-5 fw-bold">NT$ {{ course.price }}</span>
-                      <!-- <button type="button" class="btn btn-outline-primary border-0 fw-bold">
-                        設定上課時間
-                      </button> -->
-                    </p>
+                      <div>
+                        <button @click.prevent="getBuyer(course.courseId)" type="button" class="btn btn-outline-primary border-0 fw-bold" data-bs-toggle="modal" data-bs-target="#SetStudyTimeModal" title="設定上課時間">
+                          設定上課時間
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </router-link>
               </div>
             </div>
           </div>
-          <div v-if="coursesCollection.length === 0" class="tab-pane fade" id="collection" role="tabpanel" aria-labelledby="collection-tab">
-            <div class="w-100 w-lg-70 w-xl-60">
+          <div class="tab-pane fade" id="collection" role="tabpanel" aria-labelledby="collection-tab">
+            <div v-if="coursesCollection.length === 0" class="w-100 w-lg-70 w-xl-60">
               <div class="text-center">
                 <p class="fs-1 my-16">尚未收藏課程</p>
                 <router-link to="/courses" class="btn btn-primary rounded-4">添加收藏</router-link>
               </div>
             </div>
-          </div>
-          <div class="tab-pane fade" id="collection" role="tabpanel" aria-labelledby="collection-tab">
             <div class="w-100 w-lg-70 w-xl-60">
               <div v-for="(course) in coursesCollection" :key="course.courseId">
                 <router-link :to="`/course/${course.courseId}`" class="course-card-list">
@@ -168,13 +164,10 @@
                       <span class="material-symbols-outlined fs-6 me-4">map</span>
                       <span class="me-8">{{ course.location }}</span>
                       <span class="material-symbols-outlined fs-6 me-4">group</span>
-                      <span>{{ coursesJoined.length }}</span>
+                      <span>{{ course.buyer.length }}</span>
                     </p>
                     <p class="d-flex justify-content-between align-items-center">
                       <span class="text-custom-black fs-5 fw-bold">NT$ {{ course.price }}</span>
-                      <!-- <button type="button" class="btn btn-outline-primary border-0 fw-bold">
-                        設定上課時間
-                      </button> -->
                     </p>
                   </div>
                 </router-link>
@@ -182,38 +175,42 @@
             </div>
           </div>
         </div>
-        <!-- <div v-if="!isLoading" class="tab-content">
-        </div> -->
       </div>
     </div>
   </div>
+  <SetStudyTimeModal />
+  <MyStudyTimeModal />
 </template>
 <script>
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import userStore from '../../stores/userStore'
+// import Modal from 'bootstrap/js/dist/modal'
+
+import SetStudyTimeModal from '../../components/SetStudyTimeModal.vue'
+import MyStudyTimeModal from '../../components/MyStudyTimeModal.vue'
 import CardHorizontalPlaceholder from '@/components/CardHorizontalPlaceholder.vue'
 
 export default {
   data () {
     return {
-      AllCourseData: []
     }
   },
   components: {
-    CardHorizontalPlaceholder
+    CardHorizontalPlaceholder, SetStudyTimeModal, MyStudyTimeModal
   },
   methods: {
-    ...mapActions(userStore, ['checkMemberObserver', 'getUserAllCollection', 'getUserAllCreated', 'toggleCollection'])
+    ...mapActions(userStore, ['checkMemberObserver', 'getUserAllCollection', 'getUserAllCreated', 'toggleCollection', 'getBuyer', 'editStudyTime', 'getMyStudyTime', 'getAllUserData'])
   },
   computed: {
-    ...mapState(userStore, ['uid', 'userData', 'getUserAllJoin', 'coursesCreated', 'coursesCollection', 'coursesJoined', 'isLoading', 'collectionStatus']),
+    ...mapState(userStore, ['uid', 'userData', 'getUserAllJoin', 'coursesCreated', 'coursesCollection', 'coursesJoined', 'isLoading', 'collectionStatus', 'buyerStudyTimeData']),
     ...mapWritableState(userStore, ['singUpData'])
   },
   created () {
-    this.checkMemberObserver()
     this.getUserAllCollection()
     this.getUserAllCreated()
     this.getUserAllJoin()
+  },
+  mounted () {
   }
 }
 </script>
@@ -231,7 +228,7 @@ export default {
     font-family: sans-serif;
     border-radius: 16px;
     overflow: hidden;
-    z-index: 0;
+    // z-index: 0;
     &:hover {
       .bookmark-icon {
         height: 24px !important;
@@ -246,7 +243,7 @@ export default {
   }
   .meta {
     position: relative;
-    z-index: 0;
+    // z-index: 0;
     overflow: hidden;
     @media (min-width: 576px) {
       flex-basis: 40%;
@@ -257,17 +254,17 @@ export default {
     padding: 1rem;
     background: #fff;
     position: relative;
-    z-index: 1;
+    // z-index: 1;
     &::before {
       transform: skew(-3deg);
       content: "";
       background: #fff;
       width: 30px;
       position: absolute;
-      left: -10px;
+      left: -20px;
       top: 0;
       bottom: 0;
-      z-index: -1;
+      // z-index: -1;
     }
     @media (min-width: 576px) {
       flex-basis: 60%;

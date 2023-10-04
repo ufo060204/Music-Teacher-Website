@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { getFirestore, doc, getDoc, addDoc, updateDoc, arrayUnion, arrayRemove, deleteField, collection } from 'firebase/firestore/lite'
+import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, arrayUnion, arrayRemove, deleteField, collection } from 'firebase/firestore/lite'
 import router from '../router'
 import Swal from 'sweetalert2'
 import userStore from './userStore'
@@ -192,12 +192,21 @@ export default defineStore('cartStore', {
         console.log('訂購的時間', this.orderTime)
         console.log('要送出的訂單檔案', newOrderRef)
         console.log('要送出的訂單檔案 id', newOrderRef.id)
+        // 將訂單 id 加入此訂單中
+        await updateDoc(newOrderRef, { orderId: newOrderRef.id })
 
         this.selectedCoursesFinal.forEach(async (item) => {
           // 增加課程到 courses_joined
           await updateDoc(userRef, { courses_joined: arrayUnion(item) }, { merge: true })
           // 增加購買者到 AllCourses 的課程當中
           await updateDoc(item, { buyer: arrayUnion(this.uid) }, { merge: true })
+
+          const buyerStudyTimeCollectionRef = collection(fs, 'AllCourses', (await getDoc(item)).data().courseId, 'buyerStudyTime')
+          await setDoc(doc(buyerStudyTimeCollectionRef, this.uid), { createdTime: this.orderTime })
+
+          // 參考到 buyerStudyTime 集合
+          // const buyerStudyTimeCollectionRef = collection(courseDocRef, 'buyerStudyTime')
+          // await addDoc(buyerStudyTimeCollectionRef, {})
         })
 
         // 加入訂單編號到購買者
@@ -216,6 +225,25 @@ export default defineStore('cartStore', {
           icon: 'success'
         })
       }
+    },
+    refTest () {
+      const refTest = []
+      this.selectedCoursesFinal.forEach(async (item) => {
+        refTest.push((await getDoc(item)).data())
+        // 增加課程到 courses_joined
+        // await updateDoc(userRef, { courses_joined: arrayUnion(item) }, { merge: true })
+        // 增加購買者到 AllCourses 的課程當中
+        // await updateDoc(item, { buyer: arrayUnion(this.uid) }, { merge: true })
+
+        // 參考到 buyerStudyTime 集合
+        // await updateDoc(buyerStudyTimeCollectionRef, 'thisIsUid', {
+        //   createdTime: 1695314902799
+        // })
+        const buyerStudyTimeCollectionRef = collection(fs, 'AllCourses', (await getDoc(item)).data().courseId, 'buyerStudyTime')
+        await setDoc(doc(buyerStudyTimeCollectionRef, 'uid'), { createdTime: 1695314902799 })
+        console.log('buyerStudyTimeCollectionRef 設置成功', buyerStudyTimeCollectionRef)
+      })
+      console.log('refTest', refTest)
     },
     copyCouponCode (text) {
       navigator.clipboard.writeText(text)
@@ -259,6 +287,7 @@ export default defineStore('cartStore', {
     goBackCart () {
       this.cartStatus = 'cart'
     },
+    // 勾選出準備結帳的項目
     async filterSelect () {
       const userRef = doc(fs, 'users', this.uid)
       const userDoc = await getDoc(userRef)
@@ -275,6 +304,7 @@ export default defineStore('cartStore', {
         this.selectedCoursesFinal = filteredReferences
         console.log('篩選後的參考', filteredReferences)
         console.log('最後要加入訂單的參考', this.selectedCoursesFinal)
+        // this.refTest()
       } else {
         console.log('User document does not exist.')
       }

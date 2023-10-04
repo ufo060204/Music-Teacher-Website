@@ -17,10 +17,11 @@
           <div class="row mb-16 mb-lg-32">
             <div class="col-12 col-lg-8 mb-32 mb-lg-0">
               <div class="pe-xl-48">
-                <img class="h-lg-500 w-100 rounded-4" :src="courseViewDetails.data?.courseImg" alt="課程圖片">
+                <img class="h-lg-500 w-100 rounded-4 object-fit-cover" :src="courseViewDetails.data?.courseImg" alt="課程圖片">
               </div>
             </div>
             <div class="col-12 col-lg-4 d-flex flex-column">
+              <div> {{  }} </div>
               <h1 class="fs-2 fw-bold">{{ courseViewDetails.data.name }}</h1>
               <p class="mt-16 text-grey-bold">{{ courseViewDetails.data.courseIntro }}</p>
               <button type="button" @click.prevent="toggleCollection(courseViewDetails.data.courseId)" class="btn btn-outline-primary px-16 py-8 mt-auto ms-auto rounded-pill d-flex align-items-center" title="加入 / 移除收藏">
@@ -91,9 +92,19 @@
                   <span class="fs-1">NT$ {{ courseViewDetails.data.price }}</span>
                 </div>
                 <div class="d-flex justify-content-between">
-                  <router-link v-if="isMember" to="/cart" @click="addToCart(courseViewDetails.data.courseId)" type="button" class="btn btn-outline-primary w-75 rounded-pill">立即購買</router-link>
-                  <button v-if="!isMember" @click="addToCart(courseViewDetails.data.courseId)" type="button" class="btn btn-outline-primary w-75 rounded-pill">立即購買</button>
-                  <button @click="addToCart(courseViewDetails.data.courseId)" type="button" class="btn btn btn-primary rounded-pill">
+                  <router-link v-if="isMember && !isBought" to="/cart" @click="addToCart(courseViewDetails.data.courseId)" type="button" class="btn btn-outline-primary w-75 rounded-pill">
+                    立即購買
+                  </router-link>
+                  <button v-if="isMember && isBought" type="button" class="btn btn-outline-primary w-75 rounded-pill" disabled>
+                    已購買
+                  </button>
+                  <button v-if="!isMember" @click="addToCart(courseViewDetails.data.courseId)" type="button" class="btn btn-outline-primary w-75 rounded-pill">
+                    立即購買
+                  </button>
+                  <button v-if="!isBought" @click="addToCart(courseViewDetails.data.courseId)" type="button" class="btn btn btn-primary rounded-pill">
+                    <span class="material-symbols-outlined fs-3 align-middle">shopping_cart</span>
+                  </button>
+                  <button v-if="isBought" type="button" class="btn btn btn-primary rounded-pill" disabled>
                     <span class="material-symbols-outlined fs-3 align-middle">shopping_cart</span>
                   </button>
                 </div>
@@ -161,11 +172,11 @@ export default {
   },
   methods: {
     ...mapActions(cartStore, ['addToCart', 'getUid']),
-    ...mapActions(coursesStore, ['getCourseDetails', 'getSuggestCourses']),
-    ...mapActions(userStore, ['checkMemberObserver', 'addToCollection', 'toggleCollection', 'checkMemberObserver'])
+    ...mapActions(coursesStore, ['getCourseDetails', 'getSuggestCourses', 'boughtCheck']),
+    ...mapActions(userStore, ['checkMemberObserver', 'addToCollection', 'toggleCollection', 'checkMemberObserver', 'getUserAllJoin'])
   },
   computed: {
-    ...mapState(coursesStore, ['courseDetails', 'courseViewDetails', 'AllCourseData', 'isLoading', 'suggestCourses']),
+    ...mapState(coursesStore, ['courseDetails', 'courseViewDetails', 'AllCourseData', 'isLoading', 'suggestCourses,', 'isBought']),
     ...mapState(cartStore, ['uid', 'cart']),
     ...mapState(userStore, ['uid', 'collectionStatus', 'isMember'])
   },

@@ -2,9 +2,11 @@ import { defineStore } from 'pinia'
 import Swal from 'sweetalert2'
 import { getFirestore, doc, getDoc, getDocs, updateDoc, collection } from 'firebase/firestore/lite'
 import teacherStore from './teacherStore'
+import userStore from './userStore'
 
 const fs = getFirestore()
 const teacherData = teacherStore()
+const userData = userStore()
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -20,6 +22,7 @@ const Toast = Swal.mixin({
 export default defineStore('coursesStore', {
   state: () => ({
     isLoading: true,
+    isBought: null,
     AllCourseData: [],
     teacherNames: {},
     courseDetails: {
@@ -75,9 +78,9 @@ export default defineStore('coursesStore', {
 
       querySnapshot.forEach((item) => {
         const courseData = item.data()
-        console.log('這是 courseData', courseData)
+        // console.log('這是 courseData', courseData)
         const teacherRef = courseData.teacherId
-        console.log('這是 teacherId', teacherRef)
+        // console.log('這是 teacherId', teacherRef)
 
         // 使用 Promise 將老師數據獲取操作加到數組中
         const teacherPromise = getDoc(teacherRef).then((teacherDoc) => {
@@ -109,10 +112,6 @@ export default defineStore('coursesStore', {
     getBuyerCount (course) {
       return course.data.buyer.length
     },
-    // async getTopTenCourses () {
-    //   await this.getAllCoursesAndTeacher() // 確保已獲取所有課程數據
-    //   console.log('篩選前', this.AllCourseData[0])
-    // },
     // 取得暢銷課程前 10
     async getPopularCourses () {
       this.popularCourses = []
@@ -148,12 +147,11 @@ export default defineStore('coursesStore', {
       this.isLoading = true
       const courseRef = doc(fs, 'AllCourses', courseId)
       const courseDoc = await getDoc(courseRef)
-      console.log('store 的', courseDoc)
-      console.log('store 的 courseId', courseId)
+      // console.log('store 的', courseDoc)
+      // console.log('store 的 courseId', courseId)
 
       if (courseDoc.exists()) {
         const courseData = courseDoc.data()
-        // const teacherId = courseData.teacherId
         const teacherRef = courseData.teacherId // 注意這邊取得的是引用
 
         const teacherDoc = await getDoc(teacherRef) // 用引用 Reference 的方式取得資料
@@ -172,6 +170,7 @@ export default defineStore('coursesStore', {
             teacherUid
           }
           this.courseViewDetails = JSON.parse(JSON.stringify(this.courseDetails))
+          this.boughtCheck(courseId)
         } else {
           console.log(`老師 document ${teacherRef.path} 不存在`)
         }
@@ -186,7 +185,6 @@ export default defineStore('coursesStore', {
       this.courseDetails.data.courseImg = teacherData.teacherData.courseImg
       await updateDoc(doc(fs, 'AllCourses', courseId), this.courseDetails.data)
       try {
-        // this.isEditMode = false
         teacherData.teacherData.courseImg = ''
         console.log('課程資料更新成功')
         this.getCourseDetails(courseId)
@@ -202,6 +200,42 @@ export default defineStore('coursesStore', {
           icon: 'error',
           title: '課程資料更新失敗'
         })
+      }
+    },
+    // 是否購買過確認
+    async boughtCheck (courseId) {
+      await userData.checkMemberObserver()
+      const userRef = doc(fs, 'users', userData.uid)
+
+      try {
+        const userDoc = await getDoc(userRef)
+
+        if (userDoc.exists()) {
+          const coursesJoinedRefs = await userDoc.get('courses_joined')
+          const courseArr = await Promise.all(
+            coursesJoinedRefs.map(async (courseRef) => {
+              const courseDoc = await getDoc(courseRef)
+              return courseDoc.data().courseId
+            })
+          )
+
+          console.log('courseArr', courseArr)
+          console.log('boughtCheck 的 courseId', courseId)
+
+          if (courseArr.includes(courseId)) {
+            this.isBought = true
+            console.log('存在 arr 中，已購買過')
+          } else {
+            this.isBought = false
+            console.log('不存在 arr 中，未購買過')
+          }
+
+          console.log('是否購買過', this.isBought)
+        } else {
+          console.log('使用者 document 不存在(收藏)')
+        }
+      } catch (error) {
+        console.error('沒有符合的課程:', error)
       }
     }
   },
