@@ -1,10 +1,7 @@
 <template>
-  <!-- <section class="landing-img landing-header" /> -->
-  <!-- <VueLoading :active="isLoading" :color="color" :z-index="9999"/> -->
   <section class="mt-66">
     <BannerArea />
     <div class="container">
-      <!-- <card-horizontal-placeholder v-if="isLoading = true"/> -->
       <div class="py-32">
         <div v-if="this.cartStatus === 'cart'" class="row">
           <div v-if="isLoading" class="col-12 col-lg-8">
@@ -13,7 +10,6 @@
           <div v-if="!isLoading && cart.length === 0" class="row d-flex align-items-center justify-content-center">
             <div class="col-md-4 col-10 d-flex align-items-center justify-content-center flex-column py-80 border rounded-4">
               <h1 class="fs-2 fw-bold mb-16">購物車</h1>
-              <!-- <img class="my-6 img-fluid" style="height: 150px;" src="../../assets/images/SignWarning.png" alt="SignWarning"> -->
               <h2 class="fs-4 mb-16">購物車是空的，來去逛逛吧！</h2>
               <router-link to="/courses" class="btn btn-primary rounded-pill text-white py-3 px-7 fs-5">前往課程</router-link>
             </div>
@@ -36,7 +32,7 @@
                     <input v-model="selectedCourseIds" class="form-check-input" type="checkbox" id="course" name="courses" :value="course.courseId">
                   </td>
                   <td width="12%">
-                    <img class="table-image" :src="course.courseImg" alt="課程圖片">
+                    <img class="img-fluid rounded-2" :src="course.courseImg" alt="課程圖片">
                   </td>
                   <td width="60%">
                     <div class="container">
@@ -167,18 +163,14 @@
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import cartStore from '@/stores/cartStore'
 import bannerStore from '../../stores/bannerStore'
-import Swal from 'sweetalert2'
 import CardHorizontalPlaceholder from '@/components/CardHorizontalPlaceholder.vue'
 import BannerArea from '../../components/BannerArea.vue'
-const { VITE_APP_URL, VITE_APP_PATH } = import.meta.env
 export default {
   data () {
     return {
       products: [],
       productId: '',
       loadingItem: '',
-      // couponCode: '',
-      // isLoading: false,
       color: '#FF700C',
       form: {
         user: {
@@ -197,7 +189,7 @@ export default {
   watch: {
     selectedCourseIds: function (newSelect) {
       this.selectedCourses = this.cart.filter((course) => newSelect.includes(course.courseId))
-      console.log('選擇的課程', this.selectedCourses)
+      // console.log('選擇的課程', this.selectedCourses)
     },
     cartStatus () {
       if (this.cartStatus === 'cart') {
@@ -223,83 +215,7 @@ export default {
   },
   methods: {
     ...mapActions(cartStore, ['getCart', 'removeFromCollection', 'getUid', 'addCouponCode', 'goCheckout', 'goBackCart', 'checkout', 'filterSelect', 'checkAllCourses', 'refTest']),
-    ...mapActions(bannerStore, ['getBannerInfo']),
-    updateCartItem (item) {
-      const data = {
-        product_id: item.product.id,
-        qty: item.qty
-      }
-      this.loadingItem = item.id
-      this.$http
-        .put(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/cart/${item.id}`, { data })
-        .then((res) => {
-          this.getCarts()
-          this.loadingItem = ''
-          Swal.fire({
-            icon: 'success',
-            title: '已更新數量',
-            showConfirmButton: false,
-            timer: 1500
-          })
-        })
-        .catch((err) => {
-          Swal.fire(err.data.message)
-        })
-    },
-    checkCoupon () {
-      const data = {
-        code: this.couponCode
-      }
-      const api = `${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/coupon`
-      this.$http.post(api, { data })
-        .then((res) => {
-          if (res.data.success === true) {
-            Swal.fire(
-              '套用成功',
-              '已套用優惠券 zongzi40',
-              'success'
-            )
-          } else if (res.data.success === false) {
-            Swal.fire({
-              icon: 'error',
-              title: '套用失敗',
-              text: '找不到優惠券QQ',
-              footer: '<a href="https://ufo060204.github.io/Zongzi-Shop-Webside/#/home/-NR8JzTIYKZ08sSYBdjQ">前往領取優惠碼'
-            })
-          }
-          this.getCarts()
-        })
-        .catch((err) => {
-          Swal.fire(err.response.data.message)
-        })
-    },
-    deleteAllCart () {
-      Swal.fire({
-        title: '刪除確認?',
-        text: '確定要清除購物車的所有商品嗎？',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: '是的'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.$http
-            .delete(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/carts`)
-            .then((res) => {
-              this.getCarts()
-              Swal.fire(
-                '刪除成功',
-                '購物車的商品已清空',
-                'success'
-              )
-            })
-            .catch((err) => {
-              Swal.fire(err.data.message)
-            })
-        }
-      })
-    }
+    ...mapActions(bannerStore, ['getBannerInfo'])
   },
   created () {
     this.getBannerInfo(
@@ -317,15 +233,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .table-image {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-  .add-cart-text {
-    background-color: #FF700C;
-  }
-  .add-cart-text:hover {
-    background-color: #BD5309;
-  }
 </style>

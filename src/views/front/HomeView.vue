@@ -120,11 +120,11 @@
       </div>
     </section>
     <!-- 優惠券碼 -->
-    <!-- <section class="bg-grey py-12">
+    <!-- <section class="py-12">
       <div class="container">
         <div style="background-image: url('https://images.unsplash.com/photo-1540593463874-59835505e99d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80'); background-attachment: fixed;  height: 200px; background-size: cover;" class="bg-attachment-fixed d-flex justify-content-center align-items-center rounded-4">
           <div class="w-auto">
-            <p class="fs-1 fw-bold">12/31 前參加課程，可享8折優惠！</p>
+            <p class="fs-3 fw-bold">12/31 前參加課程，可享8折優惠！</p>
             <button @click="copyCouponCode('888')" type="button" class="btn btn-primary w-100 rounded-4">馬上領取</button>
           </div>
         </div>

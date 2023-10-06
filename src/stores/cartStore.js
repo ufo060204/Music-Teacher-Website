@@ -43,9 +43,9 @@ export default defineStore('cartStore', {
         const auth = getAuth()
         onAuthStateChanged(auth, (user) => {
           if (user) {
-            console.log('這是使用者內容', user)
+            // console.log('這是使用者內容', user)
             this.uid = user.uid
-            console.log('這是 uid', this.uid)
+            // console.log('這是 uid', this.uid)
             resolve(this.uid) // 回傳 uid 的 Resolve
           } else if (!user) {
             console.log('你是登出狀態')
@@ -78,7 +78,7 @@ export default defineStore('cartStore', {
 
       // 檢查購物車中是否已包含相同的課程 ID
       if (this.cart.some((cartItem) => cartItem.courseId === courseId)) {
-        console.log('課程已在購物車中')
+        // console.log('課程已在購物車中')
         Toast.fire({
           icon: 'info',
           title: '課程已在購物車中'
@@ -90,16 +90,16 @@ export default defineStore('cartStore', {
       await updateDoc(userDocRef, { cart: arrayUnion(courseDocRef) }, { merge: true })
       try {
         this.getCart()
-        console.log('加入購物車成功')
+        // console.log('加入購物車成功')
         Toast.fire({
           icon: 'success',
           title: '加入購物車成功'
         })
       } catch (err) {
-        console.log('加入購物車失敗', err)
+        // console.log('加入購物車失敗', err)
         Toast.fire({
           icon: 'error',
-          title: '加入購物車失敗'
+          title: `加入購物車失敗 ${err}`
         })
       }
     },
@@ -115,16 +115,16 @@ export default defineStore('cartStore', {
 
       try {
         this.getCart()
-        console.log('從購物車移除成功')
+        // console.log('從購物車移除成功')
         Toast.fire({
           icon: 'success',
           title: '從購物車移除成功'
         })
       } catch (err) {
-        console.log('從購物車移除失敗', err)
+        // console.log('從購物車移除失敗', err)
         Toast.fire({
           icon: 'error',
-          title: '從購物車移除失敗'
+          title: `從購物車移除失敗 ${err}`
         })
       }
     },
@@ -138,32 +138,32 @@ export default defineStore('cartStore', {
 
         if (userDoc.exists()) {
           const coursesCreatedRefs = userDoc.get('cart')
-          console.log('購物車參考', coursesCreatedRefs)
+          // console.log('購物車參考', coursesCreatedRefs)
           const coursePromises = coursesCreatedRefs.map(courseRef => getDoc(courseRef)) // 使用 map 建立每個 array 的 promises
 
           const courseDocs = await Promise.all(coursePromises) // 等待所有 Promise resolve
           this.cart = courseDocs.map(doc => doc.data())
 
-          console.log('購物車內容', this.cart)
+          // console.log('購物車內容', this.cart)
           this.isLoading = false
         } else {
           console.log('User document does not exist.')
           this.cart = []
           this.isLoading = false
         }
-      } catch (error) {
-        console.error('購物車內容錯誤:', error)
+      } catch (err) {
+        console.error('購物車內容錯誤:', err)
         this.isLoading = false
       }
     },
     checkAllCourses () {
-      console.log(this.isSelectedCoursesAll)
+      // console.log(this.isSelectedCoursesAll)
       if (!this.isSelectedCoursesAll) {
         this.cart.forEach((item) => {
           this.selectedCourses.push(item)
           this.selectedCourseIds.push(item.courseId)
-          console.log(this.selectedCourses)
-          console.log(this.selectedCourseIds)
+          // console.log(this.selectedCourses)
+          // console.log(this.selectedCourseIds)
         })
       } else {
         this.selectedCourses = []
@@ -177,7 +177,7 @@ export default defineStore('cartStore', {
       // 建立訂單時間
       this.orderTime = Date.now()
       if (userDoc.exists()) {
-        console.log('購物車內容(更新後)', this.selectedCoursesFinal)
+        // console.log('購物車內容(更新後)', this.selectedCoursesFinal)
 
         // 創建新的訂單文檔，加入購買課程、訂單時間、購買者、總金額、優惠金額
         const newOrderRef = await addDoc(collection(fs, 'orders'), {
@@ -189,9 +189,9 @@ export default defineStore('cartStore', {
           useCoupon: this.useCoupon
         })
 
-        console.log('訂購的時間', this.orderTime)
-        console.log('要送出的訂單檔案', newOrderRef)
-        console.log('要送出的訂單檔案 id', newOrderRef.id)
+        // console.log('訂購的時間', this.orderTime)
+        // console.log('要送出的訂單檔案', newOrderRef)
+        // console.log('要送出的訂單檔案 id', newOrderRef.id)
         // 將訂單 id 加入此訂單中
         await updateDoc(newOrderRef, { orderId: newOrderRef.id })
 
@@ -203,10 +203,6 @@ export default defineStore('cartStore', {
 
           const buyerStudyTimeCollectionRef = collection(fs, 'AllCourses', (await getDoc(item)).data().courseId, 'buyerStudyTime')
           await setDoc(doc(buyerStudyTimeCollectionRef, this.uid), { createdTime: this.orderTime })
-
-          // 參考到 buyerStudyTime 集合
-          // const buyerStudyTimeCollectionRef = collection(courseDocRef, 'buyerStudyTime')
-          // await addDoc(buyerStudyTimeCollectionRef, {})
         })
 
         // 加入訂單編號到購買者
@@ -215,7 +211,7 @@ export default defineStore('cartStore', {
         // 刪除 遠端 cart 內容
         await updateDoc(userRef, { cart: deleteField() })
         await updateDoc(userRef, { cart: [] })
-        console.log('結帳成功, 參加課程追加成功')
+        // console.log('結帳成功, 參加課程追加成功')
         this.cart = []
         this.cartStatus = 'cart'
         this.total = 0
@@ -230,15 +226,6 @@ export default defineStore('cartStore', {
       const refTest = []
       this.selectedCoursesFinal.forEach(async (item) => {
         refTest.push((await getDoc(item)).data())
-        // 增加課程到 courses_joined
-        // await updateDoc(userRef, { courses_joined: arrayUnion(item) }, { merge: true })
-        // 增加購買者到 AllCourses 的課程當中
-        // await updateDoc(item, { buyer: arrayUnion(this.uid) }, { merge: true })
-
-        // 參考到 buyerStudyTime 集合
-        // await updateDoc(buyerStudyTimeCollectionRef, 'thisIsUid', {
-        //   createdTime: 1695314902799
-        // })
         const buyerStudyTimeCollectionRef = collection(fs, 'AllCourses', (await getDoc(item)).data().courseId, 'buyerStudyTime')
         await setDoc(doc(buyerStudyTimeCollectionRef, 'uid'), { createdTime: 1695314902799 })
         console.log('buyerStudyTimeCollectionRef 設置成功', buyerStudyTimeCollectionRef)
@@ -293,17 +280,17 @@ export default defineStore('cartStore', {
       const userDoc = await getDoc(userRef)
       if (userDoc.exists()) {
         const coursesCreatedRefs = userDoc.get('cart')
-        console.log('購物車參考', coursesCreatedRefs)
+        // console.log('購物車參考', coursesCreatedRefs)
         // 使用 filter 方法來篩選出具有指定 courseId 的項目
         const filteredReferences = coursesCreatedRefs.filter((cartRef) => {
           // 從 cartRef 中取得文檔的 id
           const cartItemId = cartRef.id
-          console.log('cart課程參考當中的 id', cartItemId)
+          // console.log('cart課程參考當中的 id', cartItemId)
           return this.selectedCourseIds.includes(cartItemId)
         })
         this.selectedCoursesFinal = filteredReferences
-        console.log('篩選後的參考', filteredReferences)
-        console.log('最後要加入訂單的參考', this.selectedCoursesFinal)
+        // console.log('篩選後的參考', filteredReferences)
+        // console.log('最後要加入訂單的參考', this.selectedCoursesFinal)
         // this.refTest()
       } else {
         console.log('User document does not exist.')

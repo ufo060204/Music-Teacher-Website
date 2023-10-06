@@ -28,9 +28,9 @@ export default defineStore('teacherStore', {
     getUid () {
       const auth = getAuth()
       onAuthStateChanged(auth, (user) => {
-        console.log(user)
+        // console.log(user)
         this.teacherUid = user.uid
-        console.log('這是 teacherUid', this.teacherUid)
+        // console.log('這是 teacherUid', this.teacherUid)
       })
     },
     // 測試關聯 - 開新課程與老師關聯
@@ -46,17 +46,17 @@ export default defineStore('teacherStore', {
       try {
         // 首先，創建新的課程文檔
         const newCourseRef = await addDoc(collection(fs, 'AllCourses'), this.teacherData)
-        console.log('這是要送出的課程檔案', this.teacherData)
+        // console.log('這是要送出的課程檔案', this.teacherData)
 
         // 接著，使用參考關聯課程到對應的老師
         // 創建新課程關聯
         const courseDocRef = doc(fs, 'AllCourses', newCourseRef.id)
         // 創立老師介紹的路徑
-        console.log('創建新課程關聯', courseDocRef)
+        // console.log('創建新課程關聯', courseDocRef)
 
         // 課程老師檔案
         const teacherDocRef = doc(fs, 'users', this.teacherUid)
-        console.log('課程老師uid - teacherUid', this.teacherUid)
+        // console.log('課程老師uid - teacherUid', this.teacherUid)
 
         // 加入隨機產生的課程 id 成為 course_id 的屬性
         await setDoc(courseDocRef, { courseId: newCourseRef.id }, { merge: true })
@@ -79,7 +79,7 @@ export default defineStore('teacherStore', {
         this.teacherData.courseImg = ''
         this.teacherData.teacherImg = ''
 
-        console.log('新課程創建成功')
+        // console.log('新課程創建成功')
         // alert('新課程創建成功')
         Swal.fire({
           icon: 'success',
@@ -88,18 +88,18 @@ export default defineStore('teacherStore', {
           timer: 1500
         })
         router.push('/teacher/stepFour')
-      } catch (error) {
-        console.error('Error adding course: ', error)
+      } catch (err) {
+        // console.error('Error adding course: ', error)
         Swal.fire({
           icon: 'error',
-          title: `新課程創建失敗 ${error}`
+          title: `新課程創建失敗 ${err}`
         })
       }
     },
     // 新增課程
     async setCourseData () {
       try {
-        console.log('這是要建立的課程資料', this.teacherData)
+        // console.log('這是要建立的課程資料', this.teacherData)
         await addDoc(collection(fs, 'AllCourses'), this.teacherData)
         // alert('課程新增成功')
         Swal.fire({
@@ -139,7 +139,7 @@ export default defineStore('teacherStore', {
     beforeUpdate (file) {
       return new Promise((resolve) => {
         const validType = ['image/jpeg', 'image/png']
-        console.log('圖片格式', file.type)
+        // console.log('圖片格式', file.type)
         const isValidType = validType.includes(file.type)
         const isValidSize = file.size / 1024 / 1024 < 0.15
         if (!isValidType) {
@@ -173,10 +173,10 @@ export default defineStore('teacherStore', {
       reader.onload = (event) => {
         if (item === 'course') {
           this.teacherData.courseImg = event.target.result
-          console.log('課程圖片連結', this.teacherData.courseImg)
+          // console.log('課程圖片連結', this.teacherData.courseImg)
         } else if (item === 'teacher') {
           this.teacherData.teacherImg = event.target.result
-          console.log('老師圖片連結', this.teacherData.teacherImg)
+          // console.log('老師圖片連結', this.teacherData.teacherImg)
         }
       }
     }

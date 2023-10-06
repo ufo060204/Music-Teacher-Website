@@ -78,10 +78,10 @@ export default defineStore('usersStore', {
       createUserWithEmailAndPassword(auth, this.singUpData.email, this.singUpData.password)
         .then((userCredential) => {
           // const user = userCredential.user
-          console.log('userCredential.user', userCredential.user)
+          // console.log('userCredential.user', userCredential.user)
           this.userData.uid = userCredential.user.uid
           this.userData.email = userCredential.user.email
-          console.log('這是準備傳送的 userData', this.userData)
+          // console.log('這是準備傳送的 userData', this.userData)
           this.setUserData()
           this.checkMemberObserver()
           this.singUpData.email = ''
@@ -98,8 +98,8 @@ export default defineStore('usersStore', {
         .catch((error) => {
           // const errorCode = error.code
           // const errorMessage = error.message
-          console.log('你註冊失敗了', error.code)
-          console.log('你註冊失敗了', error.message)
+          // console.log('你註冊失敗了', error.code)
+          // console.log('你註冊失敗了', error.message)
           // alert('你註冊失敗了', error.message)
           if (error.code === 'auth/email-already-in-use') {
             Swal.fire({
@@ -123,14 +123,14 @@ export default defineStore('usersStore', {
       signInWithEmailAndPassword(auth, this.loginUser.email, this.loginUser.password)
         .then((userCredential) => {
           // Signed in
-          console.log(userCredential.user)
+          // console.log(userCredential.user)
           const userDocRef = doc(fs, 'users', userCredential.user.uid)
           setDoc(userDocRef, { lastSignInTime: userCredential.user.metadata.lastSignInTime }, { merge: true })
-          console.log('更新最後登入時間')
+          // console.log('更新最後登入時間')
           this.isMember = true
           this.loginUser.email = ''
           this.loginUser.password = ''
-          console.log('登入成功')
+          // console.log('登入成功')
           // alert('登入成功')
           Swal.fire({
             icon: 'success',
@@ -140,14 +140,14 @@ export default defineStore('usersStore', {
           })
           router.push('/')
         })
-        .catch((error) => {
-          console.log(error.code)
-          console.log(error.message)
-          console.log('登入失敗')
+        .catch((err) => {
+          // console.log(error.code)
+          // console.log(error.message)
+          // console.log('登入失敗')
           // alert('登入失敗')
           Swal.fire({
             icon: 'error',
-            title: '登入失敗',
+            title: `登入失敗 ${err.message}`,
             showConfirmButton: false,
             timer: 1500
           })
@@ -159,14 +159,14 @@ export default defineStore('usersStore', {
       signInWithPopup(auth, provider)
         .then((result) => {
           // This gives you a Google Access Token. You can use it to access the Google API.
-          const credential = GoogleAuthProvider.credentialFromResult(result)
-          const token = credential.accessToken
-          console.log('token', token)
+          // const credential = GoogleAuthProvider.credentialFromResult(result)
+          // const token = credential.accessToken
+          // console.log('token', token)
           // 登入使用者資訊
-          console.log(result.user)
-          console.log(result.user.metadata)
-          console.log('創建時間', result.user.metadata.creationTime)
-          console.log('登入時間', result.user.metadata.lastSignInTime)
+          // console.log(result.user)
+          // console.log(result.user.metadata)
+          // console.log('創建時間', result.user.metadata.creationTime)
+          // console.log('登入時間', result.user.metadata.lastSignInTime)
           // IdP data available using getAdditionalUserInfo(result)
           this.isMember = true
           // 檢查是否是首次登入
@@ -176,13 +176,13 @@ export default defineStore('usersStore', {
             this.userData.creationTime = result.user.metadata.creationTime
             this.userData.lastSignInTime = result.user.metadata.lastSignInTime
             // this.userData = userCredential.user
-            console.log('這是第一次登入')
-            console.log('這是準備傳送的 userData', this.userData)
+            // console.log('這是第一次登入')
+            // console.log('這是準備傳送的 userData', this.userData)
             this.setUserData()
           } else {
             const userDocRef = doc(fs, 'users', result.user.uid)
             setDoc(userDocRef, { lastSignInTime: result.user.metadata.lastSignInTime }, { merge: true })
-            console.log('更新最後登入時間')
+            // console.log('更新最後登入時間')
           }
           router.push('/')
           // alert('使用google登入成功')
@@ -191,18 +191,18 @@ export default defineStore('usersStore', {
             icon: 'success',
             title: '使用google登入成功'
           })
-        }).catch((error) => {
+        }).catch((err) => {
           // 錯誤訊息
-          console.log(error.code)
-          console.log(error.message)
+          // console.log(error.code)
+          // console.log(error.message)
           // The email of the user's account used.
-          console.log(error.customData.email)
+          // console.log(error.customData.email)
           // The AuthCredential type that was used.
-          console.log(GoogleAuthProvider.credentialFromError(error))
+          // console.log(GoogleAuthProvider.credentialFromError(error))
           // alert('使用google登入失敗')
           Toast.fire({
             icon: 'error',
-            title: '使用 google 登入失敗'
+            title: `使用 google 登入失敗 ${err.message}`
           })
         })
     },
@@ -211,7 +211,7 @@ export default defineStore('usersStore', {
       const auth = getAuth()
       signOut(auth)
         .then((res) => {
-          console.log('登出成功', res)
+          // console.log('登出成功', res)
           this.isMember = false
           // alert('登出成功', res)
           Toast.fire({
@@ -219,13 +219,13 @@ export default defineStore('usersStore', {
             title: '登出成功'
           })
         // Sign-out successful.
-        }).catch((error) => {
+        }).catch((err) => {
         // An error happened.
-          console.log('登出錯誤', error)
+          // console.log('登出錯誤', error)
           // alert('登出錯誤', error)
           Toast.fire({
             icon: 'warning',
-            title: '登出錯誤'
+            title: `登出錯誤 ${err}`
           })
         })
     },
@@ -234,18 +234,18 @@ export default defineStore('usersStore', {
       try {
         // await addDoc(fs, 'users', `${this.userData.uid}`, this.userData)
         await setDoc(doc(fs, 'users', this.userData.uid), this.userData)
-        console.log('課程會員新增資料成功')
+        // console.log('課程會員新增資料成功')
         // alert('課程會員新增資料成功')
         Toast.fire({
           icon: 'success',
           title: '課程會員新增資料成功'
         })
       } catch (err) {
-        console.log('課程會員資料新增失敗', err)
+        // console.log('課程會員資料新增失敗', err)
         // alert('課程會員資料新增失敗', err)
         Toast.fire({
           icon: 'error',
-          title: '課程會員資料新增失敗'
+          title: `課程會員資料新增失敗 ${err}`
         })
       }
     },
@@ -267,7 +267,7 @@ export default defineStore('usersStore', {
             // })
           } else if (!user) {
             this.isMember = false
-            console.log('你是登出狀態')
+            // console.log('你是登出狀態')
           } else {
             reject(new Error('你是登出狀態'))
             this.isMember = false
@@ -300,7 +300,7 @@ export default defineStore('usersStore', {
         const docSnap = await getDoc(docRef)
 
         if (docSnap.exists()) {
-          console.log('會員資料 Document data:', docSnap.data())
+          // console.log('會員資料 Document data:', docSnap.data())
           this.userData = docSnap.data()
           this.personalViewData = { ...this.userData }
         } else {
@@ -315,7 +315,7 @@ export default defineStore('usersStore', {
       await updateDoc(doc(fs, 'users', this.userData.uid), this.userData)
       try {
         this.isEditMode = false
-        console.log('資料更新成功')
+        // console.log('資料更新成功')
         // alert('資料更新成功')
         this.getUserDataAll()
         Toast.fire({
@@ -323,10 +323,10 @@ export default defineStore('usersStore', {
           title: '會員資料更新成功'
         })
       } catch (err) {
-        console.log('資料更新失敗', err)
+        // console.log('資料更新失敗', err)
         // alert('資料更新失敗', err)
         Toast.fire({
-          icon: 'error',
+          icon: `error ${err}`,
           title: '會員資料更新失敗'
         })
       }
@@ -352,7 +352,7 @@ export default defineStore('usersStore', {
     beforeUpdate (file) {
       return new Promise((resolve) => {
         const validType = ['image/jpeg', 'image/png']
-        console.log('圖片格式', file.type)
+        // console.log('圖片格式', file.type)
         const isValidType = validType.includes(file.type)
         const isValidSize = file.size / 1024 / 1024 < 0.15
         if (!isValidType) {
@@ -386,7 +386,7 @@ export default defineStore('usersStore', {
       reader.onload = (event) => {
         if (item === 'course') {
           this.teacherData.courseImg = event.target.result
-          console.log('課程圖片連結', this.teacherData.courseImg)
+          // console.log('課程圖片連結', this.teacherData.courseImg)
           // alert('使用者圖片更新成功')
           Toast.fire({
             icon: 'success',
@@ -394,7 +394,7 @@ export default defineStore('usersStore', {
           })
         } else if (item === 'teacher') {
           this.userData.userPhoto = event.target.result
-          console.log('老師圖片連結', this.userData.userPhoto)
+          // console.log('老師圖片連結', this.userData.userPhoto)
           updateDoc(doc(fs, 'users', this.userData.uid), this.userData)
           // alert('使用者圖片更新成功')
           Toast.fire({
@@ -403,7 +403,7 @@ export default defineStore('usersStore', {
           })
         } else if (item === 'background') {
           this.userData.userBackgroundPhoto = event.target.result
-          console.log('老師圖片連結', this.userData.userPhoto)
+          // console.log('老師圖片連結', this.userData.userPhoto)
           updateDoc(doc(fs, 'users', this.userData.uid), this.userData)
           // alert('使用者圖片更新成功')
           Toast.fire({
@@ -437,10 +437,10 @@ export default defineStore('usersStore', {
         })
         .then(courseDocs => {
           this.coursesCreated = courseDocs.map(doc => doc.data())
-          console.log('使用者開立的課程:', this.coursesCreated)
+          // console.log('使用者開立的課程:', this.coursesCreated)
         })
-        .catch(error => {
-          console.error('沒有符合的開課:', error)
+        .catch(err => {
+          console.err('沒有符合的開課:', err)
         })
     },
     // 加入到收藏
@@ -461,16 +461,16 @@ export default defineStore('usersStore', {
       await updateDoc(userDocRef, { coursesCollection: arrayUnion(courseDocRef) }, { merge: true })
       try {
         this.getUserAllCollection()
-        console.log('加入收藏成功')
+        // console.log('加入收藏成功')
         Toast.fire({
           icon: 'success',
           title: '加入收藏成功'
         })
       } catch (err) {
-        console.log('加入收藏失敗', err)
+        // console.log('加入收藏失敗', err)
         Toast.fire({
           icon: 'error',
-          title: '加入收藏失敗'
+          title: `加入收藏失敗 ${err}`
         })
       }
     },
@@ -487,15 +487,15 @@ export default defineStore('usersStore', {
 
       try {
         this.getUserAllCollection()
-        console.log('移除收藏成功')
+        // console.log('移除收藏成功')
         Toast.fire({
           icon: 'success',
           title: '移除收藏成功'
         })
       } catch (err) {
-        console.log('移除收藏失敗', err)
+        // console.log('移除收藏失敗', err)
         Toast.fire({
-          icon: 'error',
+          icon: `error ${err}`,
           title: '移除收藏失敗'
         })
       }
@@ -535,11 +535,11 @@ export default defineStore('usersStore', {
           }))
           // 取得使用者收藏的課程 id
           this.coursesCollectionId = courseDocs.map(doc => doc.data().courseId)
-          console.log('使用者收藏的課程', this.coursesCollection)
-          console.log('使用者收藏的課程 id', this.coursesCollectionId)
+          // console.log('使用者收藏的課程', this.coursesCollection)
+          // console.log('使用者收藏的課程 id', this.coursesCollectionId)
         })
-        .catch(error => {
-          console.error('沒有符合的收藏:', error)
+        .catch(err => {
+          console.err('沒有符合的收藏:', err)
         })
     },
     // 取得 user 所有參加課程
@@ -573,11 +573,11 @@ export default defineStore('usersStore', {
               teacherDisplayName
             }
           }))
-          console.log('使用者參加的課程', this.coursesJoined)
+          // console.log('使用者參加的課程', this.coursesJoined)
           this.isLoading = false
         })
-        .catch(error => {
-          console.error('沒有符合的課程:', error)
+        .catch(err => {
+          console.err('沒有符合的課程:', err)
         })
     },
     // 取得課程老師名稱 (參加、收藏)
@@ -590,8 +590,8 @@ export default defineStore('usersStore', {
         } else {
           return 'Unknown Teacher'
         }
-      } catch (error) {
-        console.error('獲取老師資料失敗', error)
+      } catch (err) {
+        console.err('獲取老師資料失敗', err)
         return 'Unknown Teacher'
       }
     },
@@ -599,10 +599,10 @@ export default defineStore('usersStore', {
       // console.log('有點到')
       if (this.coursesCollectionId.indexOf(courseId) > -1) {
         this.removeFromCollection(courseId)
-        console.log('courseId 存在')
+        // console.log('courseId 存在')
       } else {
         this.addToCollection(courseId)
-        console.log(' courseId 不存在')
+        // console.log(' courseId 不存在')
       }
     },
     // 取得購買者上課時間(老師)
@@ -626,8 +626,7 @@ export default defineStore('usersStore', {
         data.displayName = userData.displayName
         this.buyerStudyTimeData.push(data)
       })
-      // this.buyerStudyTimeData = buyerStudyTimeData
-      console.log('buyerStudyTimeData 數據', this.buyerStudyTimeData)
+      // console.log('buyerStudyTimeData 數據', this.buyerStudyTimeData)
     },
     // 取得我的上課時間(學生)
     async getMyStudyTime (courseId) {
@@ -642,7 +641,7 @@ export default defineStore('usersStore', {
         if (item.id === this.uid) {
           this.myStudyTimeData.push(item.data())
         }
-        console.log('我的上課時間', this.myStudyTimeData)
+        // console.log('我的上課時間', this.myStudyTimeData)
       })
     },
     closeBuyTimeModal () {
@@ -652,7 +651,7 @@ export default defineStore('usersStore', {
     beforeUpdateBuyerStudyTime (courseId, userId) {
       this.updateBuyerStudyTimeCourseId = courseId
       this.updateBuyerStudyTimeUid = userId
-      console.log('準備更新的上課時間對象', this.updateBuyerStudyTimeCourseId, this.updateBuyerStudyTimeUid)
+      // console.log('準備更新的上課時間對象', this.updateBuyerStudyTimeCourseId, this.updateBuyerStudyTimeUid)
     },
     // 更新學生上課時間
     async updateBuyerStudyTime () {
@@ -663,16 +662,16 @@ export default defineStore('usersStore', {
           studyTime: this.buyerStudyTime
         })
         this.buyerStudyTimeData = []
-        console.log('上課時間更新成功')
+        // console.log('上課時間更新成功')
         Toast.fire({
           icon: 'success',
           title: '上課時間更新成功'
         })
-      } catch (error) {
-        console.error('上課時間更新失敗：', error)
+      } catch (err) {
+        // console.error('上課時間更新失敗：', error)
         Toast.fire({
           icon: 'error',
-          title: '上課時間更新失敗'
+          title: `上課時間更新失敗 ${err}`
         })
       }
     },
@@ -703,14 +702,14 @@ export default defineStore('usersStore', {
               })
               this.buyerStudyTimeAll.push(data)
             })
-            console.log('使用者上課時間', this.buyerStudyTimeAll)
+            // console.log('使用者上課時間', this.buyerStudyTimeAll)
           } else {
             console.log('使用者 document 不存在(收藏)')
             // return []
           }
         })
-        .catch(error => {
-          console.error('取得使用者文檔出錯:', error)
+        .catch(err => {
+          console.err('取得使用者文檔出錯:', err)
         })
     }
   },

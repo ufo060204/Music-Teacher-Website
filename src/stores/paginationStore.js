@@ -64,7 +64,7 @@ export default defineStore('paginationStore', {
       for (let i = startPage; i <= endPage; i++) { // 其餘頁數套用
         this.page.pageNumBox.push(i)
       }
-      console.log(this.page.pageNumBox)
+      // console.log(this.page.pageNumBox)
     }
   }
 

@@ -41,12 +41,12 @@ export default defineStore('orderStore', {
         const userOrdersData = userData.myOrders
 
         if (userOrdersData.length === 0) {
-          console.log('您沒有購買紀錄')
+          // console.log('您沒有購買紀錄')
           this.isBuyHistory = false
           this.isLoading = false
           return
         }
-        console.log('使用者的 userOrdersData 內容', userOrdersData)
+        // console.log('使用者的 userOrdersData 內容', userOrdersData)
 
         const ordersCollectionRef = collection(fs, 'orders')
 
@@ -62,7 +62,7 @@ export default defineStore('orderStore', {
           existingOrders.push(orderData)
         })
 
-        console.log('存在於 userOrdersData 中的訂單(尚未有課程細節)', existingOrders)
+        // console.log('存在於 userOrdersData 中的訂單(尚未有課程細節)', existingOrders)
 
         // 創建一個陣列來存儲包含課程詳細資訊的訂單
         const ordersWithCourseDetails = []
@@ -93,7 +93,7 @@ export default defineStore('orderStore', {
 
         // 更新 this.myOrders
         this.myOrders = ordersWithCourseDetails
-        console.log('我的訂單結果', this.myOrders)
+        // console.log('我的訂單結果', this.myOrders)
         this.isLoading = false
         this.isBuyHistory = true
         // Toast.fire({
@@ -105,8 +105,6 @@ export default defineStore('orderStore', {
         console.log('找不到該用戶的文檔')
       }
     }
-  },
-  getOrderCourseDetails () {
   },
   getters: {
   }

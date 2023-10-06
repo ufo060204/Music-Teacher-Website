@@ -57,9 +57,9 @@ export default defineStore('coursesStore', {
     async getAllCourses () {
       const querySnapshot = await getDocs(collection(fs, 'AllCourses'))
       this.AllCourseData = []
-      console.log('querySnapshot,', querySnapshot)
+      // console.log('querySnapshot,', querySnapshot)
       querySnapshot.forEach((item) => {
-        console.log(item.id, ' => ', item.data())
+        // console.log(item.id, ' => ', item.data())
         const handleData = {
           id: item.id,
           createdTime: item._document.createTime.timestamp.seconds, // 創建時間
@@ -67,7 +67,7 @@ export default defineStore('coursesStore', {
         }
         this.AllCourseData.push(handleData)
       })
-      console.log('所有課程資料', this.AllCourseData)
+      // console.log('所有課程資料', this.AllCourseData)
     },
     // 取得所有課程資料和老師(top 10 popularCoursesSwiper)
     async getAllCoursesAndTeacher () {
@@ -105,8 +105,8 @@ export default defineStore('coursesStore', {
       })
       // 使用 Promise.all() 等待所有老師數據取得完成
       await Promise.all(teacherPromises)
-      console.log('所有課程數據', this.AllCourseData)
-      console.log('老師名稱', this.teacherNames)
+      // console.log('所有課程數據', this.AllCourseData)
+      // console.log('老師名稱', this.teacherNames)
       this.isLoading = false
     },
     getBuyerCount (course) {
@@ -116,15 +116,15 @@ export default defineStore('coursesStore', {
     async getPopularCourses () {
       this.popularCourses = []
       await this.getAllCoursesAndTeacher()
-      console.log('購買人數排序前 - 購買人數', this.AllCourseData.map(course => course.data.buyer.length))
-      console.log('購買人數排序前 - 課程名稱', this.AllCourseData.map(course => course.data.name))
+      // console.log('購買人數排序前 - 購買人數', this.AllCourseData.map(course => course.data.buyer.length))
+      // console.log('購買人數排序前 - 課程名稱', this.AllCourseData.map(course => course.data.name))
       this.AllCourseData.sort((a, b) => {
         return b.data.buyer.length - a.data.buyer.length
       })
-      console.log('購買人數排序後 - 購買人數', this.AllCourseData.map(course => course.data.buyer.length))
-      console.log('購買人數排序後 - 課程名稱', this.AllCourseData.map(course => course.data.name))
+      // console.log('購買人數排序後 - 購買人數', this.AllCourseData.map(course => course.data.buyer.length))
+      // console.log('購買人數排序後 - 課程名稱', this.AllCourseData.map(course => course.data.name))
       this.popularCourses = this.AllCourseData.slice(0, 10)
-      console.log('暢銷課程前 10 名', this.popularCourses)
+      // console.log('暢銷課程前 10 名', this.popularCourses)
     },
     // 取得推薦課程 3
     async getSuggestCourses () {
@@ -139,7 +139,7 @@ export default defineStore('coursesStore', {
       })
       const shuffled = sameTypeCourse.sort(() => 0.5 - Math.random())
       this.suggestCourses = shuffled.slice(0, 3)
-      console.log('推薦課程', this.suggestCourses)
+      // console.log('推薦課程', this.suggestCourses)
       this.isLoading = false
     },
     // 取得單一課程內容
@@ -177,7 +177,7 @@ export default defineStore('coursesStore', {
       } else {
         console.log(`課程 document ${courseId} 不存在`)
       }
-      console.log('單一課程資料', this.courseDetails)
+      // console.log('單一課程資料', this.courseDetails)
       this.isLoading = false
     },
     // 更新課程內容
@@ -186,7 +186,7 @@ export default defineStore('coursesStore', {
       await updateDoc(doc(fs, 'AllCourses', courseId), this.courseDetails.data)
       try {
         teacherData.teacherData.courseImg = ''
-        console.log('課程資料更新成功')
+        // console.log('課程資料更新成功')
         this.getCourseDetails(courseId)
         // alert('課程資料更新成功')
         Toast.fire({
@@ -194,11 +194,11 @@ export default defineStore('coursesStore', {
           title: '課程資料更新成功'
         })
       } catch (err) {
-        console.log('課程資料更新失敗', err)
+        // console.log('課程資料更新失敗', err)
         // alert('課程資料更新失敗')
         Toast.fire({
           icon: 'error',
-          title: '課程資料更新失敗'
+          title: `課程資料更新失敗 ${err}`
         })
       }
     },
@@ -219,23 +219,23 @@ export default defineStore('coursesStore', {
             })
           )
 
-          console.log('courseArr', courseArr)
-          console.log('boughtCheck 的 courseId', courseId)
+          // console.log('courseArr', courseArr)
+          // console.log('boughtCheck 的 courseId', courseId)
 
           if (courseArr.includes(courseId)) {
             this.isBought = true
-            console.log('存在 arr 中，已購買過')
+            // console.log('存在 arr 中，已購買過')
           } else {
             this.isBought = false
-            console.log('不存在 arr 中，未購買過')
+            // console.log('不存在 arr 中，未購買過')
           }
 
-          console.log('是否購買過', this.isBought)
+          // console.log('是否購買過', this.isBought)
         } else {
           console.log('使用者 document 不存在(收藏)')
         }
-      } catch (error) {
-        console.error('沒有符合的課程:', error)
+      } catch (err) {
+        console.error('沒有符合的課程:', err)
       }
     }
   },

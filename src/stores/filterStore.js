@@ -15,7 +15,7 @@ export default defineStore('filterStore', {
   }),
   actions: {
     courseSort () {
-      console.log(this.selectSort)
+      // console.log(this.selectSort)
       if (this.selectSort === '金額') {
         courseData.AllCourseData.sort((a, b) => {
           return b.data.price - a.data.price

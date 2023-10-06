@@ -203,7 +203,7 @@ export default {
   created () {
     this.checkMemberObserver()
     this.courseId = this.$route.params.id
-    console.log('這是 courseId', this.courseId)
+    // console.log('這是 courseId', this.courseId)
     this.getCourseDetails(this.courseId)
     this.getSuggestCourses()
   }
