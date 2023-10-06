@@ -24,7 +24,6 @@
     "@fullcalendar/list": "^6.1.9",
     "@fullcalendar/timegrid": "^6.1.9",
     "@fullcalendar/vue3": "^6.1.9",
-    "@popperjs/core": "^2.11.6",
     "@vee-validate/i18n": "^4.8.0",
     "@vee-validate/rules": "^4.8.0",
     "aos": "^2.3.4",

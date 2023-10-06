@@ -677,14 +677,13 @@ export default defineStore('usersStore', {
       }
     },
     async getUserAllJoinStudyTime () {
+      this.buyerStudyTimeAll = []
       await this.checkMemberObserver()
       const userRef = doc(fs, 'users', this.uid)
-
       getDoc(userRef)
         .then(async userDoc => {
           if (userDoc.exists()) {
             const coursesJoinedRefs = await userDoc.get('courses_joined')
-
             coursesJoinedRefs.map(async courseRef => {
               const data = {}
               const courseDoc = await getDoc(courseRef)
@@ -694,7 +693,7 @@ export default defineStore('usersStore', {
               const buyerStudyTimeCollection = collection(fs, 'AllCourses', courseId, 'buyerStudyTime')
               const studyTimeSnapshot = await getDocs(buyerStudyTimeCollection)
               studyTimeSnapshot.forEach(async item => {
-                console.log('item.data', item.id, item.data())
+                // console.log('item.data', item.id, item.data())
                 if (item.id === this.uid) {
                   if (item.data().studyTime) {
                     data.start = moment(item.data().studyTime).format('YYYY-MM-DD HH:mm')
@@ -704,7 +703,6 @@ export default defineStore('usersStore', {
               })
               this.buyerStudyTimeAll.push(data)
             })
-
             console.log('使用者上課時間', this.buyerStudyTimeAll)
           } else {
             console.log('使用者 document 不存在(收藏)')

@@ -6,8 +6,8 @@
 import { mapActions, mapState } from 'pinia'
 import userStore from '../stores/userStore'
 import windowStore from '../stores/windowStore'
-// import Tooltip from 'tippy.js' // npm i tippy.js
-// import 'tippy.js/dist/tippy.css'
+import Tooltip from 'tippy.js' // npm i tippy.js
+import 'tippy.js/dist/tippy.css'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -33,12 +33,13 @@ export default {
         // locale: 'zh-tw',
         dayMaxEventRows: 2.0, // 事件最大展示列數
         aspectRatio: 1.35,
-        weekNumberCalculation: 'iso', // 周次的显示格式。
-        handleWindowResize: true, // 響應式
+        weekNumberCalculation: 'iso', // 週次的顯示格式
+        handleWindowResize: true, // RWD
         selectable: true, // 是否可以選中日曆格
         expandRows: true,
-        // stickyFooterScrollbar: true, //
-        windowResize: function () { // 瀏覽器窗體變化時觸發
+        // stickyFooterScrollbar: true,
+        // 瀏覽器窗體變化時觸發
+        windowResize: function () {
           console.log(window.innerWidth)
         },
         titleFormat: {
@@ -46,11 +47,12 @@ export default {
           month: 'long',
           day: 'numeric'
         },
+        // 日曆上方的按钮和 title
         headerToolbar: {
           left: 'prev next today',
           center: 'title',
           right: 'dayGridMonth timeGridWeek timeGridDay'
-        }, // 日曆上方的按钮和title
+        },
         buttonText: {
           today: '今天',
           month: '月',
@@ -71,34 +73,29 @@ export default {
         },
         displayEventEnd: true, //
         // eventMouseEnter: this.eventMouseEnter,
-        dateClick: info => {
-          console.log(info)
-        }, // 點擊日期info是單元格的信息
-        eventClick: info => {
-          console.log(info)
-          // dialogVisible.value = true;
-        } // 事件的點擊
-        // eventDidMount: function (info) {
-        //   const tooltip = new Tooltip(info.el, {
-        //     content: info.event._def.title,
-        //     placement: 'top'
-        //   }) // 懸浮提示
-        // }
+        // 點擊日期info是單元格的信息
+        // dateClick: info => {
+        //   console.log(info)
+        // },
+        // 事件的點擊
+        // eventClick: info => {
+        //   console.log(info)
+        //   // dialogVisible.value = true;
+        // },
         // events: [
-        // start: 2023-10-31 12:00,
-        // end: 2023-11-01 12:00
-        //   { title: 'event 1', date: '2023-10-31' },
-        //   { title: 'event 2', date: '2023-11-01' }
-        // ]
+        // // start: 2023-10-31 12:00,
+        // // end: 2023-11-01 12:00
+        // //   { title: 'event 1', date: '2023-10-31' },
+        // //   { title: 'event 2', date: '2023-11-01' }
+        // ],
+        // 懸浮提示
+        eventDidMount: function (info) {
+          Tooltip(info.el, {
+            content: info.event._def.title,
+            placement: 'top'
+          })
+        }
       },
-      // loading : function(isLoading, view){ //视图数据加载中、加载完成触发
-      //                         console.log("↓↓↓loading↓↓↓");
-      //                         if(isLoading == true){
-      //                             console.log("view:"+view+",开始加载");
-      //                         }else if(isLoading == false){
-      //                             console.log("view:"+view+",加载完成");
-      //                         }
-      //                     },
       eventSources: [
       ],
       views: ['timeGridWeek']
@@ -143,7 +140,6 @@ export default {
     ...mapState(windowStore, ['windowWidth'])
   },
   created () {
-    // this.getUserAllJoinStudyTime()
     this.calendarOptions.events = this.buyerStudyTimeAll
   },
   mounted () {

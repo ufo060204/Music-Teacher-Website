@@ -65,13 +65,17 @@
             <div v-if="!isLoading && coursesJoined.length !== 0" class="w-100 w-lg-70 w-xl-60">
               <div v-for="(course) in coursesJoined" :key="course.courseId">
                 <router-link :to="`/course/${course.courseId}`" class="course-card-list">
-                  <div class="meta position-relative h-170px">
+                  <div class="course-card-header position-relative h-170px">
                     <img class="w-100 h-100 object-fit-cover transition" :src="course.courseImg" alt="課程圖片">
                     <span @click.prevent="toggleCollection(course.courseId)" class="material-icons-outlined position-absolute bottom-0 start-10px text-primary bookmark-icon transition" :class="{ 'h-auto' : this.collectionStatus(course.courseId) === 'bookmark', 'h-0' : this.collectionStatus(course.courseId) === 'bookmark_border' }" title="加入 / 移除收藏">
                       {{ this.collectionStatus(course.courseId) }}
                     </span>
+                    <div class="d-flex align-items-center position-absolute tag-icon text-pink top-10px start-10px opacity-0 transition">
+                      <span class="material-symbols-outlined fs-6">sell</span>
+                      <span>{{ course.type }}</span>
+                    </div>
                   </div>
-                  <div class="description">
+                  <div class="course-card-body">
                     <h2 class="text-custom-black fs-5 fw-bold d-flex mb-4">
                       {{ course.name }}
                     </h2>
@@ -105,13 +109,17 @@
             <div class="w-100 w-lg-70 w-xl-60">
               <div v-for="(course) in coursesCreated" :key="course.courseId">
                 <router-link :to="`/course/${course.courseId}`" class="course-card-list">
-                  <div class="meta position-relative h-170px">
+                  <div class="course-card-header position-relative h-170px">
                     <img class="w-100 h-100 object-fit-cover transition" :src="course.courseImg" alt="課程圖片">
                     <span @click.prevent="toggleCollection(course.courseId)" class="material-icons-outlined position-absolute bottom-0 start-10px text-primary bookmark-icon transition" :class="{ 'h-auto' : this.collectionStatus(course.courseId) === 'bookmark', 'h-0' : this.collectionStatus(course.courseId) === 'bookmark_border' }" title="加入 / 移除收藏">
                       {{ this.collectionStatus(course.courseId) }}
                     </span>
+                    <div class="d-flex align-items-center position-absolute tag-icon text-pink top-10px start-10px opacity-0 transition">
+                      <span class="material-symbols-outlined fs-6">sell</span>
+                      <span>{{ course.type }}</span>
+                    </div>
                   </div>
-                  <div class="description">
+                  <div class="course-card-body">
                     <h2 class="text-custom-black fs-5 fw-bold d-flex mb-4">
                       {{ course.name }}
                     </h2>
@@ -147,13 +155,17 @@
             <div class="w-100 w-lg-70 w-xl-60">
               <div v-for="(course) in coursesCollection" :key="course.courseId">
                 <router-link :to="`/course/${course.courseId}`" class="course-card-list">
-                  <div class="meta position-relative h-170px">
+                  <div class="course-card-header position-relative h-170px">
                     <img class="w-100 h-100 object-fit-cover transition" :src="course.courseImg" alt="課程圖片">
                     <span @click.prevent="toggleCollection(course.courseId)" class="material-icons-outlined position-absolute bottom-0 start-10px text-primary bookmark-icon transition" :class="{ 'h-auto' : this.collectionStatus(course.courseId) === 'bookmark', 'h-0' : this.collectionStatus(course.courseId) === 'bookmark_border' }" title="加入 / 移除收藏">
                       {{ this.collectionStatus(course.courseId) }}
                     </span>
+                    <div class="d-flex align-items-center position-absolute tag-icon text-pink top-10px start-10px opacity-0 transition">
+                      <span class="material-symbols-outlined fs-6">sell</span>
+                      <span>{{ course.type }}</span>
+                    </div>
                   </div>
-                  <div class="description">
+                  <div class="course-card-body">
                     <h2 class="text-custom-black fs-5 fw-bold d-flex mb-4">
                       {{ course.name }}
                     </h2>
@@ -184,8 +196,6 @@
 <script>
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import userStore from '../../stores/userStore'
-// import Modal from 'bootstrap/js/dist/modal'
-
 import SetStudyTimeModal from '../../components/SetStudyTimeModal.vue'
 import MyStudyTimeModal from '../../components/MyStudyTimeModal.vue'
 import CardHorizontalPlaceholder from '@/components/CardHorizontalPlaceholder.vue'
@@ -233,6 +243,9 @@ export default {
       .bookmark-icon {
         height: 24px !important;
       }
+      .tag-icon {
+        opacity: 1 !important;
+      }
       img {
         transform: scale(1.2);
       }
@@ -241,7 +254,7 @@ export default {
       flex-direction: row;
     }
   }
-  .meta {
+  .course-card-header {
     position: relative;
     // z-index: 0;
     overflow: hidden;
@@ -250,7 +263,7 @@ export default {
       height: auto;
     }
   }
-  .description {
+  .course-card-body {
     padding: 1rem;
     background: #fff;
     position: relative;
@@ -278,8 +291,5 @@ export default {
     width: 35px;
     top: -0.75rem;
     border-radius: 3px;
-  }
-  .h-custom {
-    height: calc(100vh - 406px);
   }
 </style>

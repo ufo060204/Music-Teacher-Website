@@ -1,0 +1,88 @@
+.fc-toolbar-title {
+  color: #8c8c8c !important;
+
+  @media (max-width:992px) {
+    font-size: 20px !important;
+  }
+}
+
+.fc-button-primary {
+  color: #8c8c8c !important;
+  background-color: #ffffff !important;
+  border-color: #8c8c8c !important;
+  border-radius: 50rem !important;
+
+  &:hover {
+    background-color: #8c8c8c !important;
+    color: #ffffff !important;
+    box-shadow: 0 !important;
+  }
+}
+
+.fc-button {
+  .fc-icon {
+    vertical-align: middle !important;
+    font-size: 16px !important;
+    color: #8c8c8c;
+    padding-bottom: 20px;
+  }
+
+  &:hover {
+    background-color: #8c8c8c !important;
+    color: #ffffff !important;
+    box-shadow: 0 !important;
+
+    .fc-icon {
+      color: #ffffff !important;
+    }
+  }
+}
+
+.fc-button-active {
+  background-color: #8c8c8c !important;
+  color: #ffffff !important;
+  box-shadow: 0 !important;
+}
+
+.fc-event {
+  position: relative;
+  font-size: 0.6em !important;
+  line-height: 1.4 !important;
+  border-radius: 5px;
+  color: #333333;
+
+  @media (min-width:992px) {
+    display: block !important;
+  }
+  
+  .fc-daygrid-event-dot {
+    display: inline-block !important;
+    border-color: #fe715f !important;
+  }
+
+  .fc-event-time {
+    display: inline !important;
+  }
+
+  .fc-event-title {
+    padding-left: 4px;
+  }
+
+}
+
+// 行事曆內框和文字顏色
+.fc-col-header-cell-cushion {
+  color: #8c8c8c !important;
+}
+
+.fc-daygrid-day-number {
+  color: #8c8c8c !important;
+}
+
+.fc-list-day-text {
+  color: #8c8c8c !important;
+}
+
+.fc-list-day-side-text {
+  color: #8c8c8c !important;
+}
