@@ -5,7 +5,7 @@
         <div class="col-12 col-lg-3 d-flex flex-column align-items-center mb-32 py-8 shadow h-100 rounded-4">
           <div class="position-relative h-100px w-100px mb-16">
             <img v-if="userData.userPhoto" class="h-100 w-100 object-fit-cover rounded-circle" :src="userData.userPhoto" alt="使用者照片">
-            <img v-else class="img-fluid rounded-circle" src="https://filestore.community.support.microsoft.com/api/profileimages/54381735-f5ec-4389-b332-e5d119079e89" alt="預設使用者照片">
+            <img v-else class="img-fluid rounded-circle" src="../../assets/images/default-user-photo.png" alt="預設使用者照片">
             <label for="photo-upload" accept="image/png ,image/jpg">
               <span class="material-symbols-outlined upload-icon">
                 cloud_upload

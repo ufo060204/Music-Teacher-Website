@@ -314,7 +314,7 @@ export default {
   created () {
     this.checkMemberTeacherStep()
     this.getBannerInfo(
-      new URL('/title-banner.jpg', import.meta.url).href,
+      new URL('../../assets/images/title-banner.jpg', import.meta.url).href,
       '課程資訊',
       'INFORMATION',
       '填寫課程資訊，讓學生輕鬆找到您的課程'

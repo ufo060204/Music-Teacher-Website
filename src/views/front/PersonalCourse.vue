@@ -7,7 +7,7 @@
             <div class="d-flex align-items-center mb-8 mb-lg-0">
               <div style="height: 100px; width: 100px;" class="position-relative">
                 <img v-if="userData.userPhoto" class="w-100 h-100 object-fit-cover rounded-circle" :src="userData.userPhoto" alt="使用者照片">
-                <img v-else class="w-100 h-100 object-fit-cover rounded-circle" src="/default-user-photo.png" alt="使用者照片">
+                <img v-else class="w-100 h-100 object-fit-cover rounded-circle" src="../../assets/images/default-user-photo.png" alt="使用者照片">
               </div>
               <h1 class="ms-11">{{ userData.displayName }}</h1>
             </div>
@@ -195,9 +195,9 @@
 </template>
 <script>
 import { mapActions, mapState, mapWritableState } from 'pinia'
-import userStore from '../../stores/userStore'
-import SetStudyTimeModal from '../../components/SetStudyTimeModal.vue'
-import MyStudyTimeModal from '../../components/MyStudyTimeModal.vue'
+import userStore from '@/stores/userStore'
+import SetStudyTimeModal from '@/components/SetStudyTimeModal.vue'
+import MyStudyTimeModal from '@/components/MyStudyTimeModal.vue'
 import CardHorizontalPlaceholder from '@/components/CardHorizontalPlaceholder.vue'
 
 export default {

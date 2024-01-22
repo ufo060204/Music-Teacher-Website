@@ -30,7 +30,7 @@
         <div class="card-body">
           <div class="d-flex align-items-center">
             <div class="me-8">
-              <img src="/default-user-photo.png" alt="預設用戶照片" class="w-40px h-40px rounded-circle object-fit-cover">
+              <img src="../assets/images/default-user-photo.png" alt="預設用戶照片" class="w-40px h-40px rounded-circle object-fit-cover">
             </div>
             <div class="">
               <div>

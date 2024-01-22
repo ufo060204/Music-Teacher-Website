@@ -112,9 +112,9 @@
 <script>
 import { mapActions, mapState } from 'pinia'
 import { RouterView } from 'vue-router'
-import cartStore from '../stores/cartStore'
-import userStore from '../stores/userStore'
-import BackToTop from '../components/BackToTop.vue'
+import cartStore from '@/stores/cartStore'
+import userStore from '@/stores/userStore'
+import BackToTop from '@/components/BackToTop.vue'
 
 export default {
   data () {

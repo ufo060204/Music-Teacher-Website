@@ -87,7 +87,7 @@ export default {
   },
   created () {
     this.getBannerInfo(
-      new URL('/title-banner.jpg', import.meta.url).href,
+      new URL('../../assets/images/title-banner.jpg', import.meta.url).href,
       '課程介紹',
       'INTRODUCE',
       '介紹課程內容，為學生營造期待感'

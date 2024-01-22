@@ -3,7 +3,7 @@
     <div class="card border-0 mb-16" aria-hidden="true">
       <div class="row align-items-center">
         <div class="col-3">
-          <img src="/card-placeholder-img.png" class="h-lg-170px w-100 object-fit-cover rounded-4" alt="card-placeholder-img">
+          <img src="../assets/images/card-placeholder-img.png" class="h-lg-170px w-100 object-fit-cover rounded-4" alt="card-placeholder-img">
         </div>
         <div class="col-9">
           <div class="card-body p-0">
@@ -25,7 +25,7 @@
     <div class="card border-0 rounded" aria-hidden="true">
       <div class="row align-items-center">
         <div class="col-3">
-          <img src="/card-placeholder-img.png" class="h-lg-170px w-100 object-fit-cover rounded-4" alt="card-placeholder-img">
+          <img src="../assets/images/card-placeholder-img.png" class="h-lg-170px w-100 object-fit-cover rounded-4" alt="card-placeholder-img">
         </div>
         <div class="col-9">
           <div class="card-body p-0">

@@ -21,7 +21,7 @@
           <div class="row align-items-center mb-16">
             <div class="col-auto cursor-pointer">
               <img v-if="userData.userPhoto" class="h-100px w-100px rounded-circle object-fit-cover" :src="userData.userPhoto" alt="老師照片">
-              <img v-else class="h-80px w-80px rounded-circle object-fit-cover" src="/default-user-photo.png" alt="老師照片">
+              <img v-else class="h-80px w-80px rounded-circle object-fit-cover" src="../../assets/images/default-user-photo.png" alt="老師照片">
             </div>
             <div class="col-auto fs-2">{{ userData.displayName }}</div>
           </div>
@@ -134,7 +134,7 @@ export default {
   },
   created () {
     this.getBannerInfo(
-      new URL('/title-banner.jpg', import.meta.url).href,
+      new URL('../../assets/images/title-banner.jpg', import.meta.url).href,
       '頁面預覽',
       'PREVIEW',
       '預覽課程頁面，確保效果完美呈現'

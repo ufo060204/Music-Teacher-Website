@@ -34,7 +34,7 @@ export default {
   computed: {},
   created () {
     this.getBannerInfo(
-      new URL('/title-banner.jpg', import.meta.url).href,
+      new URL('../../assets/images/title-banner.jpg', import.meta.url).href,
       '完成',
       'COMPLETE',
       '準備好了!您的課程將準備好在平台上展示。'

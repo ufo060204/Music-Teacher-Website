@@ -3,7 +3,7 @@
     <div class="col">
       <div class="card border-0 shadow rounded-4" aria-hidden="true">
         <div class="h-200">
-          <img src="/card-placeholder-img.png" class="h-100 w-100 object-fit-cover rounded-top-4" alt="card-placeholder-img">
+          <img src="../assets/images/card-placeholder-img.png" class="h-100 w-100 object-fit-cover rounded-top-4" alt="card-placeholder-img">
         </div>
         <div class="card-body">
           <h5 class="card-title placeholder-glow">
@@ -23,7 +23,7 @@
     <div class="col">
       <div class="card border-0 shadow rounded-4" aria-hidden="true">
         <div class="h-200">
-          <img src="/card-placeholder-img.png" class="h-100 w-100 object-fit-cover rounded-top-4" alt="card-placeholder-img">
+          <img src="../assets/images/card-placeholder-img.png" class="h-100 w-100 object-fit-cover rounded-top-4" alt="card-placeholder-img">
         </div>
         <div class="card-body">
           <h5 class="card-title placeholder-glow">
@@ -43,7 +43,7 @@
     <div class="col">
       <div class="card border-0 shadow rounded-4" aria-hidden="true">
         <div class="h-200">
-          <img src="/card-placeholder-img.png" class="h-100 w-100 object-fit-cover rounded-top-4" alt="card-placeholder-img">
+          <img src="../assets/images/card-placeholder-img.png" class="h-100 w-100 object-fit-cover rounded-top-4" alt="card-placeholder-img">
         </div>
         <div class="card-body">
           <h5 class="card-title placeholder-glow">
@@ -63,7 +63,7 @@
     <div class="col">
       <div class="card border-0 shadow rounded-4" aria-hidden="true">
         <div class="h-200">
-          <img src="/card-placeholder-img.png" class="h-100 w-100 object-fit-cover rounded-top-4" alt="card-placeholder-img">
+          <img src="../assets/images/card-placeholder-img.png" class="h-100 w-100 object-fit-cover rounded-top-4" alt="card-placeholder-img">
         </div>
         <div class="card-body">
           <h5 class="card-title placeholder-glow">

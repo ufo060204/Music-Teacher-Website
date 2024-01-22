@@ -8,9 +8,9 @@
 </template>
 <script>
 import { mapActions, mapState } from 'pinia'
-import userStore from '../../stores/userStore'
+import userStore from '@/stores/userStore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import BannerArea from '../../components/BannerArea.vue'
+import BannerArea from '@/components/BannerArea.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 // import { mapWritableState } from 'pinia'
 // import teacherStore from '@/stores/teacherStore'

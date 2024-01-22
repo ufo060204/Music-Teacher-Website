@@ -162,9 +162,9 @@
 <script>
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import cartStore from '@/stores/cartStore'
-import bannerStore from '../../stores/bannerStore'
+import bannerStore from '@/stores/bannerStore'
 import CardHorizontalPlaceholder from '@/components/CardHorizontalPlaceholder.vue'
-import BannerArea from '../../components/BannerArea.vue'
+import BannerArea from '@/components/BannerArea.vue'
 export default {
   data () {
     return {
@@ -194,14 +194,14 @@ export default {
     cartStatus () {
       if (this.cartStatus === 'cart') {
         this.getBannerInfo(
-          new URL('/title-banner.jpg', import.meta.url).href,
+          new URL('../../assets/images/title-banner.jpg', import.meta.url).href,
           '購物車',
           'CART',
           '年底前輸入『 888 』享八折優惠'
         )
       } else {
         this.getBannerInfo(
-          new URL('/title-banner.jpg', import.meta.url).href,
+          new URL('../../assets/images/title-banner.jpg', import.meta.url).href,
           '結帳',
           'CHECKOUT',
           '購物的終點，滿足的起點'
@@ -219,7 +219,7 @@ export default {
   },
   created () {
     this.getBannerInfo(
-      new URL('/title-banner.jpg', import.meta.url).href,
+      new URL('../../assets/images/title-banner.jpg', import.meta.url).href,
       '購物車',
       'CART',
       '年底前輸入『 888 』享八折優惠'

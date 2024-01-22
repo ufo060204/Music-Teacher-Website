@@ -9,11 +9,11 @@
 
 <script>
 import { mapActions } from 'pinia'
-import bannerStore from '../../stores/bannerStore'
+import bannerStore from '@/stores/bannerStore'
 
-import BannerArea from '../../components/BannerArea.vue'
+import BannerArea from '@/components/BannerArea.vue'
 import MyCalendar from '@/components/MyCalendar.vue'
-import userStore from '../../stores/userStore'
+import userStore from '@/stores/userStore'
 
 export default {
   components: {
@@ -32,7 +32,7 @@ export default {
   created () {
     this.getUserAllJoinStudyTime()
     this.getBannerInfo(
-      new URL('/title-banner.jpg', import.meta.url).href,
+      new URL('../../assets/images/title-banner.jpg', import.meta.url).href,
       '行事曆',
       'Calendar',
       '掌握課程時間，效率學習'

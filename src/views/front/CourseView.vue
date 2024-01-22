@@ -37,7 +37,7 @@
               <div class="row align-items-center mb-16">
                 <div class="col-auto cursor-pointer">
                   <img v-if="courseViewDetails.teacherImg" class="h-100px w-100px rounded-circle object-fit-cover" :src="courseViewDetails.teacherImg" alt="老師照片">
-                  <img v-else class="h-100px w-100px rounded-circle object-fit-cover" src="/default-user-photo.png" alt="老師照片">
+                  <img v-else class="h-100px w-100px rounded-circle object-fit-cover" src="../../assets/images/default-user-photo.png" alt="老師照片">
                 </div>
                 <div class="col-auto fs-2">{{ courseViewDetails.teacherName }}</div>
               </div>

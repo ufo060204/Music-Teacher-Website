@@ -241,11 +241,11 @@
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import coursesStore from '@/stores/coursesStore'
 import filterStore from '@/stores/filterStore'
-import userStore from '../../stores/userStore'
-import bannerStore from '../../stores/bannerStore'
+import userStore from '@/stores/userStore'
+import bannerStore from '@/stores/bannerStore'
 
-import CardPlaceholder from '../../components/CardPlaceholder.vue'
-import BannerArea from '../../components/BannerArea.vue'
+import CardPlaceholder from '@/components/CardPlaceholder.vue'
+import BannerArea from '@/components/BannerArea.vue'
 import PaginationArea from '@/components/PaginationArea.vue'
 
 export default {
@@ -273,7 +273,7 @@ export default {
   created () {
     this.checkMemberObserver()
     this.getBannerInfo(
-      new URL('/title-banner.jpg', import.meta.url).href,
+      new URL('../../assets/images/title-banner.jpg', import.meta.url).href,
       '全部課程',
       'ALL COURSES',
       '專業培訓，探索多元音樂風格'

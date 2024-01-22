@@ -68,11 +68,11 @@
 </template>
 <script>
 import { mapActions, mapState } from 'pinia'
-import orderStore from '../../stores/orderStore'
-import bannerStore from '../../stores/bannerStore'
+import orderStore from '@/stores/orderStore'
+import bannerStore from '@/stores/bannerStore'
 
-import ListPlaceholderVue from '../../components/ListPlaceholder.vue'
-import BannerArea from '../../components/BannerArea.vue'
+import ListPlaceholderVue from '@/components/ListPlaceholder.vue'
+import BannerArea from '@/components/BannerArea.vue'
 export default {
   data () {
     return {
@@ -92,7 +92,7 @@ export default {
   },
   created () {
     this.getBannerInfo(
-      new URL('/title-banner.jpg', import.meta.url).href,
+      new URL('../../assets/images/title-banner.jpg', import.meta.url).href,
       '購買紀錄',
       'History',
       '我的紀錄，學習的軌跡'
