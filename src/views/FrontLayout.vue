@@ -4,7 +4,7 @@
       <nav class="navbar navbar-expand-md py-8 transition" :class="{ 'bg-white shadow': isScrolled || isCollapseShow}">
         <div class="container">
           <router-link to="/" class="navbar-brand">
-            <img class="h-40px" src="/home-nav-logo.png" alt="Lele Music Tutor">
+            <img class="h-40px" src="../assets/images/home-nav-logo.png" alt="Lele Music Tutor">
           </router-link>
           <div class="d-flex align-items-center">
             <router-link to="/cart" class="nav-link text-black fw-bold position-relative d-lg-none me-24">
@@ -77,7 +77,7 @@
       <div class="container">
         <div class="d-lg-flex justify-content-lg-between align-items-lg-center text-center text-lg-start py-9">
           <router-link class="d-block mb-9 mb-lg-0" to="/">
-            <img class="h-40px" src="/logo-white.png" alt="Lele Music Tutor">
+            <img class="h-40px" src="../assets/images/logo-white.png" alt="Lele Music Tutor">
           </router-link>
           <div>
             <ul class="d-lg-flex ps-0 mb-6">

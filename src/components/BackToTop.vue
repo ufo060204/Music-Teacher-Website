@@ -1,6 +1,6 @@
 <template>
   <div :class="{'d-none' : !goTopIcon }">
-    <a href="#" @click="goTop">
+    <a href="#" @click.prevent="goTop">
       <span class="material-symbols-outlined position-fixed fs-40 bg-white border border-primary rounded-circle end-20px bottom-10px z-index-3">
         expand_less
       </span>
