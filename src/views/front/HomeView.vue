@@ -41,7 +41,7 @@
         </div>
         <div class="col-md-6">
           <div class="home-serve" data-aos="fade-up" data-aos-duration="2000">
-            <img style="height: 400px;" src="/home-serve-1.jpg" alt="home-serve-1" class="rounded-4 w-100 object-fit-cover">
+            <img style="height: 400px;" src="../../assets/images/home-serve-1.jpg" alt="home-serve-1" class="rounded-4 w-100 object-fit-cover">
           </div>
         </div>
       </div>
@@ -52,7 +52,7 @@
         </div>
         <div class="col-md-6">
           <div class="home-serve" data-aos="fade-up" data-aos-duration="2000">
-            <img style="height: 400px;" src="/home-serve-2.jpg" alt="home-serve-2" class="rounded-4 w-100 object-fit-cover">
+            <img style="height: 400px;" src="../../assets/images/home-serve-2.jpg" alt="home-serve-2" class="rounded-4 w-100 object-fit-cover">
           </div>
         </div>
       </div>
@@ -271,7 +271,7 @@ export default {
 <style lang="scss" scoped>
 .home-section2-bg {
   height: 300px;
-  background-image: url(/home-section-2.jpg);
+  background-image: url(../../assets/images/home-section-2.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position:center ;

@@ -98,19 +98,19 @@ export default {
 
 <style lang="scss" scoped>
   .banner-bg-1 {
-    background-image: url('/home-banner-1.jpg');
+    background-image: url('../assets/images/home-banner-1.jpg');
     background-size: cover;
     background-position: center center;
     min-height: 100vh;
   }
   .banner-bg-2 {
-    background-image: url('/home-banner-2.jpg');
+    background-image: url('../assets/images/home-banner-2.jpg');
     background-size: cover;
     background-position: center center;
     min-height: 100vh;
   }
   .banner-bg-3 {
-    background-image: url('/home-banner-3.jpg');
+    background-image: url('../assets/images/home-banner-3.jpg');
     background-size: cover;
     background-position: center center;
     min-height: 100vh;
