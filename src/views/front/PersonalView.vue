@@ -89,8 +89,8 @@
 
 <script>
 import { mapActions, mapState, mapWritableState } from 'pinia'
-import userStore from '../../stores/userStore'
-import teacherStore from '../../stores/teacherStore'
+import userStore from '@/stores/userStore'
+import teacherStore from '@/stores/teacherStore'
 
 import EditUserModal from '@/components/EditUserModal.vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'

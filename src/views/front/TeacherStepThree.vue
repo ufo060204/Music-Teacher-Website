@@ -103,8 +103,8 @@
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import teacherStore from '@/stores/teacherStore'
 import userStore from '@/stores/userStore'
-import bannerStore from '../../stores/bannerStore'
-import coursesStore from '../../stores/coursesStore'
+import bannerStore from '@/stores/bannerStore'
+import coursesStore from '@/stores/coursesStore'
 
 export default {
   data () {

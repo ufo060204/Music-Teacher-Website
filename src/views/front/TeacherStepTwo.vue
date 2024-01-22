@@ -66,7 +66,7 @@
 <script>
 import { mapActions, mapWritableState } from 'pinia'
 import teacherStore from '@/stores/teacherStore'
-import bannerStore from '../../stores/bannerStore'
+import bannerStore from '@/stores/bannerStore'
 export default {
   data () {
     return {

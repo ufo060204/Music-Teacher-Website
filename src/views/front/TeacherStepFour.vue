@@ -15,15 +15,12 @@
           </div>
         </div>
       </div>
-      <!-- <div class="w-100"></div>
-      <div class="col-3">
-      </div> -->
     </div>
   </div>
 </template>
 <script>
 import { mapActions } from 'pinia'
-import bannerStore from '../../stores/bannerStore'
+import bannerStore from '@/stores/bannerStore'
 export default {
   data () {
     return {}

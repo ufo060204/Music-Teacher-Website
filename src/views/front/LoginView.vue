@@ -1,73 +1,9 @@
 <template>
-  <!-- <section class="landing-img landing-header" /> -->
-  <!-- <VueLoading :active="isLoading" :color="color" :z-index="9999" /> -->
   <section class="mt-66">
-    <!-- <main>
-      <div class="container">
-        <div
-          style="height: 100vh"
-          class="row justify-content-center align-items-center"
-        >
-          <div
-            style="box-shadow: 0 0 16px rgba(0, 0, 0, 0.08)"
-            class="col-md-4 border border-boderlight py-9"
-          >
-            <h2 class="text-center fs-4 mb-5">登入</h2>
-            <form id="login" class="form-login mb-5" @submit.prevent="login()">
-              <div class="form-floating mb-3">
-                <input
-                  type="email"
-                  class="form-control"
-                  id="username"
-                  v-model="loginUser.email"
-                  placeholder="name@example.com"
-                  required
-                  autofocus
-                />
-                <label for="username">Email address</label>
-              </div>
-              <div class="form-floating">
-                <input
-                  @keydown.enter="login"
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  v-model="loginUser.password"
-                  placeholder="Password"
-                  required
-                />
-                <label for="password">Password</label>
-              </div>
-              <div class="d-flex justify-content-between">
-                <button
-                  class="btn btn-lg btn-text-dark mt-3"
-                  type="submit"
-                  id="login"
-                >
-                  登入
-                </button>
-                <button
-                  class="btn btn-lg btn-text-dark mt-3"
-                  type="button"
-                  id="loginGoogle"
-                  @click="loginGoogle"
-                >
-                  使用google登入
-                </button>
-              </div>
-            </form>
-            <div class="d-flex justify-content-between">
-              <router-link to="/">忘記密碼</router-link>
-              <router-link to="/register">前往註冊</router-link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main> -->
     <div class="container">
       <div class="row align-items-center justify-content-center justify-content-md-start">
         <div class="col-6 col-lg-4 d-none d-md-block">
-          <img class="w-100 h-100" src="../../assets/images/login-banner.jpg" alt="登入註冊頁側圖">
+          <img class="img-fluid" src="../../assets/images/login-banner.jpg" alt="登入註冊頁側圖">
         </div>
         <div class="col-8 col-md-6 col-xl-4">
           <div v-if="isLogin">
@@ -80,7 +16,6 @@
             <v-form ref="form" v-slot="{ errors }" @submit="login()" class="mx-auto w-75">
               <div class="mb-16">
                 <label for="userName" class="form-label">Email：</label>
-                <!-- <input name="email" type="email" id="email" class="form-control fs-7" placeholder="請輸入 Email"> -->
                 <v-field
                   id="userName"
                   name="帳號"
@@ -120,7 +55,6 @@
                     </div>
                   </div>
                 </div>
-                <!-- <input name="password" type="password" id="password" class="form-control fs-7" placeholder="請輸入密碼"> -->
                 <v-field
                   id="password"
                   name="密碼"
@@ -147,7 +81,6 @@
             <v-form ref="form" v-slot="{ errors }" @submit="signUp()" class="mx-auto w-75">
               <div class="mb-16">
                 <label for="displayName" class="form-label">姓名：</label>
-                <!-- <input id="displayName" type="text" class="form-control fs-7" placeholder="請輸入姓名" name="displayName"> -->
                 <v-field
                   id="displayName"
                   name="姓名"
@@ -165,7 +98,6 @@
               </div>
               <div class="mb-16">
                 <label for="email" class="form-label">Email：</label>
-                <!-- <input id="email" type="email" class="form-control fs-7" placeholder="請輸入 Email" name="email"> -->
                 <v-field
                   id="email"
                   name="email"
@@ -183,7 +115,6 @@
               </div>
               <div class="mb-16">
                 <label for="password" class="form-label">密碼：</label>
-                <!-- <input id="password" type="password" class="form-control fs-7" placeholder="請輸入密碼" name="password"> -->
                 <v-field
                   id="password"
                   name="密碼"
@@ -201,7 +132,6 @@
               </div>
               <div class="mb-16">
                 <label for="confirmation" class="form-label">再次輸入密碼：</label>
-                <!-- <input id="confirmation" type="password" class="form-control fs-7" placeholder="請再次輸入密碼" name="confirmation"> -->
                 <v-field
                   name="驗證密碼"
                   id="confirmation"
@@ -228,18 +158,10 @@
 </template>
 <script>
 import { mapActions, mapWritableState } from 'pinia'
-import userStore from '../../stores/userStore'
-// import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
-// const provider = new GoogleAuthProvider()
-// import Swal from 'sweetalert2'
-// const { VITE_APP_URL } = import.meta.env
+import userStore from '@/stores/userStore'
 export default {
   data () {
     return {
-      // loginUser: {
-      //   email: '',
-      //   password: ''
-      // },
       token: '',
       isLoading: false,
       color: '#FF700C'
@@ -247,76 +169,6 @@ export default {
   },
   methods: {
     ...mapActions(userStore, ['login', 'loginGoogle', 'signUp'])
-    // signUp () {
-    //   this.$http
-    //     .post('http://localhost:3000/signup', this.user)
-    //     .then((res) => {
-    //       console.log(res)
-    //       alert('你註冊成功了！')
-    //     })
-    //     .catch((err) => {
-    //       console.log(err.response)
-    //       alert('你註冊失敗囉QQ')
-    //     })
-    // },
-    // login () {
-    //   const auth = getAuth()
-    //   signInWithEmailAndPassword(auth, this.user.email, this.user.password)
-    //     .then((userCredential) => {
-    //       // Signed in
-    //       console.log(userCredential.user)
-    //       console.log('登入成功')
-    //       // ...
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.code)
-    //       console.log(error.message)
-    //       console.log('登入失敗')
-    //     })
-    // },
-    // loginGoogle () {
-    //   const auth = getAuth()
-    //   signInWithPopup(auth, provider)
-    //     .then((result) => {
-    //       // This gives you a Google Access Token. You can use it to access the Google API.
-    //       const credential = GoogleAuthProvider.credentialFromResult(result)
-    //       const token = credential.accessToken
-    //       console.log('token', token)
-    //       // The signed-in user info.
-    //       console.log(result.user)
-    //       // IdP data available using getAdditionalUserInfo(result)
-    //       this.$router.push('/')
-    //       alert('使用google登入成功')
-
-    //       // ...
-    //     }).catch((error) => {
-    //       // Handle Errors here.
-    //       console.log(error.code)
-    //       console.log(error.message)
-    //       // The email of the user's account used.
-    //       console.log(error.customData.email)
-    //       // The AuthCredential type that was used.
-    //       console.log(GoogleAuthProvider.credentialFromError(error))
-    //       // ...
-    //       alert('使用google登入失敗')
-    //     })
-    // }
-    // login () {
-    //   this.$http
-    //     .post('http://localhost:3000/login', this.user2)
-    //     .then((res) => {
-    //       console.log(res)
-    //       // console.log(res.data.accessToken);
-    //       this.token = res.data.accessToken
-    //       // id = res.data.user.id
-    //       console.log(this.token)
-    //       alert('你登入成功了！')
-    //     })
-    //     .catch((err) => {
-    //       console.log(err.response)
-    //       alert('你登入失敗囉OAO')
-    //     })
-    // }
   },
   computed: {
     ...mapWritableState(userStore, ['loginUser', 'isLogin', 'singUpData', 'userData'])

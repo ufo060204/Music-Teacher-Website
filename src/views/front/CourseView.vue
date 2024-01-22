@@ -1,5 +1,4 @@
 <template>
-    <!-- <section class="landing-img landing-header" /> -->
     <ListPlaceholder v-if="isLoading" class="mt-66 py-32"/>
     <div v-if="!isLoading" class="mt-66">
       <section>
@@ -153,14 +152,14 @@
 
 <script>
 import { mapActions, mapState } from 'pinia'
-import userStore from '../../stores/userStore'
-import coursesStore from '../../stores/coursesStore'
-import cartStore from '../../stores/cartStore'
+import userStore from '@/stores/userStore'
+import coursesStore from '@/stores/coursesStore'
+import cartStore from '@/stores/cartStore'
 
 import ListPlaceholder from '@/components/ListPlaceholder.vue'
 import CommentSwiper from '@/components/CommentSwiper.vue'
-import EditCourseModal from '../../components/EditCourseModal.vue'
-import SuggestCourseSwiper from '../../components/SuggestCourseSwiper.vue'
+import EditCourseModal from '@/components/EditCourseModal.vue'
+import SuggestCourseSwiper from '@/components/SuggestCourseSwiper.vue'
 
 export default {
   data () {
