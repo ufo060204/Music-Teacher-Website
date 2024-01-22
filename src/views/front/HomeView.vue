@@ -217,22 +217,22 @@
         <p class="fw-light lh-lg mb-48">與知名品牌攜手合作，為您提供更廣闊的音樂學習視野，豐富您的音樂旅程。</p>
         <div class="row row-cols-2 row-cols-md-4 g-24">
           <div class="h-180 col d-flex justify-content-center align-items-center">
-            <img class="img-fluid w-80" src="/brand-1.svg" alt="合作夥伴圖片">
+            <img class="img-fluid w-80" src="../../assets/images/brand-1.svg" alt="合作夥伴圖片">
           </div>
           <div class="h-180 col d-flex justify-content-center align-items-center">
-            <img class="img-fluid w-80" src="/brand-2.png" alt="合作夥伴圖片">
+            <img class="img-fluid w-80" src="../../assets/images/brand-2.png" alt="合作夥伴圖片">
           </div>
           <div class="h-180 col d-flex justify-content-center align-items-center">
-            <img class="img-fluid w-80" src="/brand-3.png" alt="合作夥伴圖片">
+            <img class="img-fluid w-80" src="../../assets/images/brand-3.png" alt="合作夥伴圖片">
           </div>
           <div class="h-180 col d-flex justify-content-center align-items-center">
-            <img class="img-fluid w-80" src="/brand-4.webp" alt="合作夥伴圖片">
+            <img class="img-fluid w-80" src="../../assets/images/brand-4.webp" alt="合作夥伴圖片">
           </div>
           <div class="h-180 col d-flex justify-content-center align-items-center">
-            <img class="img-fluid w-80" src="/brand-5.webp" alt="合作夥伴圖片">
+            <img class="img-fluid w-80" src="../../assets/images/brand-5.webp" alt="合作夥伴圖片">
           </div>
           <div class="h-180 col d-flex justify-content-center align-items-center">
-            <img class="img-fluid w-80" src="/brand-6.png" alt="合作夥伴圖片">
+            <img class="img-fluid w-80" src="../../assets/images/brand-6.png" alt="合作夥伴圖片">
           </div>
         </div>
       </div>
