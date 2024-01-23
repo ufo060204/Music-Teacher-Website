@@ -44,18 +44,18 @@
             <span class="material-symbols-outlined align-middle text-gray-600 lh-lg" role="button">search</span>
           </label>
         </div>
-        <div class="home-pills">
+        <div>
           <a href="#" @click.prevent="goToCourses('鋼琴')">
-            <span class="badge rounded-pill text-bg-primary text-white me-8 fw-normal">鋼琴</span>
+            <span class="badge rounded-pill home-pills-link text-bg-primary text-white me-8 fw-normal">鋼琴</span>
           </a>
-          <a href="#" @click.prevent="goToCourses('編曲')">
-            <span class="badge rounded-pill text-bg-primary text-white me-8 fw-normal">編曲</span>
+          <a href="#" @click.prevent="goToCourses('電吉他')">
+            <span class="badge rounded-pill home-pills-link text-bg-primary text-white me-8 fw-normal">電吉他</span>
           </a>
           <a href="#" @click.prevent="goToCourses('流行歌唱')">
-            <span class="badge rounded-pill text-bg-primary text-white me-8 fw-normal">流行歌唱</span>
+            <span class="badge rounded-pill home-pills-link text-bg-primary text-white me-8 fw-normal">流行歌唱</span>
           </a>
           <a href="#" @click.prevent="goToCourses('木吉他')">
-            <span class="badge rounded-pill text-bg-primary text-white me-8 fw-normal">木吉他</span>
+            <span class="badge rounded-pill home-pills-link text-bg-primary text-white me-8 fw-normal">木吉他</span>
           </a>
         </div>
       </div>
@@ -133,8 +133,9 @@ export default {
       transform: translate(-50%, -50%);
     }
   }
-  .home-pills {
-    a :hover{
+  .home-pills-link {
+    transition: all 0.2s;
+    &:hover {
       scale: 1.1;
     }
   }
