@@ -159,6 +159,8 @@ export default defineStore('cartStore', {
     checkAllCourses () {
       // console.log(this.isSelectedCoursesAll)
       if (!this.isSelectedCoursesAll) {
+        this.selectedCourses = []
+        this.selectedCourseIds = []
         this.cart.forEach((item) => {
           this.selectedCourses.push(item)
           this.selectedCourseIds.push(item.courseId)
