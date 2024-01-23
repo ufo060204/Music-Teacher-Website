@@ -14,7 +14,13 @@
               <span v-if="cart.length !== 0" style="transform: translate(-70%, -20%);" class="badge rounded-pill bg-primary position-absolute top-0 start-100 text-white">{{ cart.length }}</span>
             </router-link>
             <button @click="toggleCollapseShow()" class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+              <span v-if="isCollapseShow" class="material-symbols-outlined text-black lh-30">
+                close
+              </span>
+              <span v-else class="material-symbols-outlined text-black lh-30">
+                menu
+              </span>
+              <!-- <span v-else class="navbar-toggler-icon"></span> -->
             </button>
           </div>
           <div ref="navCollapse" class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
