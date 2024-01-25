@@ -107,6 +107,7 @@
               </li>
             </ul>
             <p class="text-white mb-0">Copyright © 2023 Taipei music design All rights reserved.</p>
+            <p class="text-white text-center fs-8 mb-0">此專題僅供作品展示，非商業用途使用</p>
           </div>
         </div>
       </div>
