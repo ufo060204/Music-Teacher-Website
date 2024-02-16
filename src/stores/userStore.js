@@ -96,13 +96,13 @@ export default defineStore('usersStore', {
           })
           router.push('/')
         })
-        .catch((error) => {
+        .catch((err) => {
           // const errorCode = error.code
           // const errorMessage = error.message
           // console.log('你註冊失敗了', error.code)
           // console.log('你註冊失敗了', error.message)
           // alert('你註冊失敗了', error.message)
-          if (error.code === 'auth/email-already-in-use') {
+          if (err.code === 'auth/email-already-in-use') {
             Swal.fire({
               icon: 'error',
               title: '你註冊失敗了',
@@ -142,16 +142,41 @@ export default defineStore('usersStore', {
           router.push('/')
         })
         .catch((err) => {
-          // console.log(error.code)
-          // console.log(error.message)
+          // console.log(err)
+          // console.log(err.code)
+          // console.log(err.message)
           // console.log('登入失敗')
           // alert('登入失敗')
-          Swal.fire({
-            icon: 'error',
-            title: `登入失敗 ${err.message}`,
-            showConfirmButton: false,
-            timer: 1500
-          })
+          if (err.code === 'auth/user-not-found') {
+            Swal.fire({
+              icon: 'error',
+              title: '登入失敗，使用者不存在',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          } else if (err.code === 'auth/wrong-password') {
+            Swal.fire({
+              icon: 'error',
+              title: '登入失敗，密碼錯誤',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          } else if (err.code === 'auth/too-many-requests') {
+            Swal.fire({
+              icon: 'error',
+              title: '嘗試次數過多，請稍後在試',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          } else {
+            Swal.fire({
+              icon: 'error',
+              // title: `登入失敗 ${err.message}`,
+              title: '登入失敗',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
         })
     },
     // 使用 google 登入，首次登入建立會員資料
@@ -194,12 +219,12 @@ export default defineStore('usersStore', {
           })
         }).catch((err) => {
           // 錯誤訊息
-          // console.log(error.code)
-          // console.log(error.message)
+          // console.log(err.code)
+          // console.log(err.message)
           // The email of the user's account used.
           // console.log(error.customData.email)
           // The AuthCredential type that was used.
-          // console.log(GoogleAuthProvider.credentialFromError(error))
+          // console.log(GoogleAuthProvider.credentialFromError(err))
           // alert('使用google登入失敗')
           Toast.fire({
             icon: 'error',
