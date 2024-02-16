@@ -46,6 +46,7 @@ export default defineStore('usersStore', {
       userIntro: '',
       creationTime: '',
       lastSignInTime: '',
+      myOrders: [],
       courses_created: [],
       courses_joined: [],
       coursesCollection: [],
@@ -86,7 +87,6 @@ export default defineStore('usersStore', {
           this.checkMemberObserver()
           this.singUpData.email = ''
           this.singUpData.password = ''
-          router.push('/')
           // alert('你已成功註冊')
           Swal.fire({
             icon: 'success',
@@ -94,6 +94,7 @@ export default defineStore('usersStore', {
             showConfirmButton: false,
             timer: 1500
           })
+          router.push('/')
         })
         .catch((error) => {
           // const errorCode = error.code
