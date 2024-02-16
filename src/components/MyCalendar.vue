@@ -40,7 +40,7 @@ export default {
         // stickyFooterScrollbar: true,
         // 瀏覽器窗體變化時觸發
         windowResize: function () {
-          console.log(window.innerWidth)
+          // console.log(window.innerWidth)
         },
         titleFormat: {
           year: 'numeric',

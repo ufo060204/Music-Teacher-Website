@@ -224,16 +224,16 @@ export default defineStore('cartStore', {
         })
       }
     },
-    refTest () {
-      const refTest = []
-      this.selectedCoursesFinal.forEach(async (item) => {
-        refTest.push((await getDoc(item)).data())
-        const buyerStudyTimeCollectionRef = collection(fs, 'AllCourses', (await getDoc(item)).data().courseId, 'buyerStudyTime')
-        await setDoc(doc(buyerStudyTimeCollectionRef, 'uid'), { createdTime: 1695314902799 })
-        console.log('buyerStudyTimeCollectionRef 設置成功', buyerStudyTimeCollectionRef)
-      })
-      console.log('refTest', refTest)
-    },
+    // refTest () {
+    //   const refTest = []
+    //   this.selectedCoursesFinal.forEach(async (item) => {
+    //     refTest.push((await getDoc(item)).data())
+    //     const buyerStudyTimeCollectionRef = collection(fs, 'AllCourses', (await getDoc(item)).data().courseId, 'buyerStudyTime')
+    //     await setDoc(doc(buyerStudyTimeCollectionRef, 'uid'), { createdTime: 1695314902799 })
+    //     console.log('buyerStudyTimeCollectionRef 設置成功', buyerStudyTimeCollectionRef)
+    //   })
+    //   console.log('refTest', refTest)
+    // },
     copyCouponCode (text) {
       navigator.clipboard.writeText(text)
         .then(() => {
@@ -295,7 +295,7 @@ export default defineStore('cartStore', {
         // console.log('最後要加入訂單的參考', this.selectedCoursesFinal)
         // this.refTest()
       } else {
-        console.log('User document does not exist.')
+        console.log('使用者 document 不存在')
       }
     }
   },

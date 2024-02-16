@@ -69,7 +69,11 @@
   }
 
 }
-
+// 周的和日項目樣式
+.fc-v-event {
+  background-color: #fe715f;
+  border-color: #8c8c8c;
+}
 // 行事曆內框和文字顏色
 .fc-col-header-cell-cushion {
   color: #8c8c8c !important;
@@ -85,4 +89,7 @@
 
 .fc-list-day-side-text {
   color: #8c8c8c !important;
+}
+.fc-list-event-dot {
+  border-color: #fe715f !important;
 }

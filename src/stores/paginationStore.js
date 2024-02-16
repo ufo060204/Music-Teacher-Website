@@ -7,7 +7,7 @@ export default defineStore('paginationStore', {
     page: {
       totalPage: 0,
       currentPage: 1,
-      pageNumBox: [], // 每次只存放的頁碼數(預定5頁)
+      pageNumBox: [], // 每次只存放的頁碼數(預定 5 頁)
       hasPrevPage: false,
       hasNextPage: false
     }
@@ -32,12 +32,12 @@ export default defineStore('paginationStore', {
       const maxData = (this.page.currentPage * this.pageSize)
 
       data.forEach((item, index) => {
-        // 獲取陣列索引，但因為索引是從 0 開始所以要 +1。
+        // 獲取陣列索引，但因為索引是從 0 開始所以要 + 1。
         const num = index + 1
         // 這邊判斷式會稍微複雜一點
-        // 當 num 比 minData 大且又小於 maxData 就push進去新陣列。
+        // 當 num 比 minData 大且又小於 maxData 就 push 進去新陣列。
         if (num >= minData && num <= maxData) {
-          // 將全部資料每20筆寫入至eachPage裡
+          // 將全部資料每 20 筆寫入至 eachPage 裡
           this.eachPage.push(item)
         }
       })
@@ -46,17 +46,17 @@ export default defineStore('paginationStore', {
     // 下方頁碼呈現方式
     showPageBox () {
       const pageBox = 5 // 下面頁碼只會顯示五頁
-      let startPage = this.page.currentPage - Math.floor(pageBox / 2) // 起始：目前頁數 − (5/2的最大整數＝2)
-      let endPage = this.page.currentPage + Math.floor(pageBox / 2) // 結尾：目前頁數 ＋ (5/2的最大整數＝2)
-      if (startPage < 1) { // 頁數1，2會套用
+      let startPage = this.page.currentPage - Math.floor(pageBox / 2) // 起始：目前頁數 − (5 / 2 的最大整數 = 2)
+      let endPage = this.page.currentPage + Math.floor(pageBox / 2) // 結尾：目前頁數 ＋ (5 / 2 的最大整數 = 2)
+      if (startPage < 1) { // 頁數 1，2 會套用
         startPage = 1
         endPage = pageBox
       }
-      if (endPage > this.page.totalPage) { // 頁數16，17套用
+      if (endPage > this.page.totalPage) { // 頁數 16，17 套用
         endPage = this.page.totalPage
         startPage = this.page.totalPage - (pageBox - 1)
       }
-      if (this.page.totalPage < 5) { // 如果頁數總長<5，就套用起始頁＝１，結尾頁＝總頁
+      if (this.page.totalPage < 5) { // 如果頁數總長 < 5，就套用起始頁 = 1，結尾頁 = 總頁
         startPage = 1
         endPage = this.page.totalPage
       }
