@@ -87,6 +87,8 @@ export default defineStore('usersStore', {
           this.checkMemberObserver()
           this.singUpData.email = ''
           this.singUpData.password = ''
+          this.singUpData.confirmation = ''
+          this.userData.displayName = ''
           // alert('你已成功註冊')
           Swal.fire({
             icon: 'success',
@@ -239,6 +241,28 @@ export default defineStore('usersStore', {
         .then((res) => {
           // console.log('登出成功', res)
           this.isMember = false
+          this.userData.displayName = ''
+          this.userData.uid = ''
+          this.userData.userPhoto = ''
+          this.userData.userBackgroundPhoto = ''
+          this.userData.email = ''
+          this.userData.tel = ''
+          this.userData.gender = ''
+          this.userData.facebook = ''
+          this.userData.instagrm = ''
+          this.userData.discord = ''
+          this.userData.birthday = ''
+          this.userData.address = ''
+          this.userData.story = ''
+          this.userData.userIntro = ''
+          this.userData.creationTime = ''
+          this.userData.lastSignInTime = ''
+          this.userData.myOrders = []
+          this.userData.courses_created = []
+          this.userData.courses_joined = []
+          this.userData.coursesCollection = []
+          this.userData.cart = []
+          this.checkMemberObserver()
           // alert('登出成功', res)
           Toast.fire({
             icon: 'success',
@@ -277,6 +301,7 @@ export default defineStore('usersStore', {
     },
     // 確認是否為登入狀態
     async checkMemberObserver () {
+      this.personalViewData = {}
       return new Promise((resolve, reject) => {
         const auth = getAuth()
         onAuthStateChanged(auth, (user) => {

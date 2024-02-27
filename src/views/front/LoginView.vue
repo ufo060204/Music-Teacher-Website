@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row align-items-center justify-content-center justify-content-md-start">
         <div class="col-6 col-lg-4 d-none d-md-block">
-          <img class="img-fluid" src="../../assets/images/login-banner.jpg" alt="登入註冊頁側圖">
+          <img class="img-fluid h-100" src="../../assets/images/login-banner.jpg" alt="登入註冊頁側圖">
         </div>
         <div class="col-8 col-md-6 col-xl-4">
           <div v-if="isLogin">
@@ -164,7 +164,8 @@ export default {
     return {
       token: '',
       isLoading: false,
-      color: '#FF700C'
+      color: '#FF700C',
+      message: 'hello Vue.js'
     }
   },
   methods: {

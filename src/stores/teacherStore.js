@@ -37,7 +37,6 @@ export default defineStore('teacherStore', {
     async createCourseConnect () {
       this.getUid()
 
-      // 轉換 price 和 time 成為數值(之後再找解決的方法)
       this.teacherData.price = Number(this.teacherData.price)
       this.teacherData.time = Number(this.teacherData.time)
 
